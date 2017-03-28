@@ -1,36 +1,41 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# name of the file snake.py
+"""
+The snake of the game.
+"""
 
-# se importan los módulos
+# import modules
 import pygame
-# se importa la clase Sprite
+# import Sprite class
 from pygame.sprite import Sprite
 
 
 class Snake(Sprite):
-    """Clase que representará a una serpiente."""
+    """Snake.
+    Use littles segments to represent a snake.
+    """
 
     def __init__(self, screen, settings, position_x, position_y):
-        """Inicializa los atributos de la clase."""
-        # se heredan los atribuos de la clase padre
+        """Store all attributes."""
+        # initialize superclass
         super(Snake, self).__init__()
-        # almacena los parámetros screen y settings como atributos
+        # store screen and settings
         self.screen = screen
         self.settings = settings
 
-        # se obtiene el rectángulo de la pantalla
+        # take rectangle of screen
         self.screen_rect = self.screen.get_rect()
 
-        # abre el archivo que representará a la serpiente
+        # load image of snake
         self.image = pygame.image.load("images/snake.png")
 
-        # toma el rectángulo de la imágen
+        # take rectangles of image
         self.rect = self.image.get_rect()
 
-        # fija su posición inicializa
+        # set initial position
         self.rect.x = position_x
         self.rect.y = position_y
 
+        # load bite sound
         self.sound_bite = pygame.mixer.Sound('sonidos/mordisco.wav')
