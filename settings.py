@@ -1,28 +1,51 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# name of the file settings.py
+"""
+Settings of the game.
+"""
 
-# se importa el módulo
+# import module
 import pygame
 
+
 class Settings():
-    """La clase contiene todas las constantes del juego."""
+    """
+    Contains all settings of the game.
+
+    Like size of screen, background color, size of snake, and so on. Even messages to be shown and data to store.
+    """
 
     def __init__(self):
-        """Inicializa todos los atributos de la clase."""
-        # constantes de la pantalla
+        """Inicializa todos los atributos de la clase.
+        Store all data"""
+        ######## Screen ########
+        # size
         self.screen_width = 1023
         self.screen_height = 545
+        # background color
         self.background_color = (96, 125, 139)
 
-        # constantes del ratón
+
+
+        ######## Mouse ########
+        # size
         self.raton_width = 16
         self.raton_height = 16
+        # color
         self.raton_color = (121, 85, 72)
+        # score
         self.raton_point = 1
+        # first range position of x and y position
+        self.raton_range_pos_xy = 8
+        # second range position of x
+        self.raton_range_pos_x = 1007
+        # second range position of y
+        self.raton_range_pos_y = 530
 
-        # constantes del muro
+
+
+        ######## Wall ########
         self.wall_size = 10
         self.wall_color = (33, 33, 33)
         # fija la pisición del muro en los bordes de la pantalla. Donde 1 es posición inicial y 2 es posición final
@@ -35,9 +58,11 @@ class Settings():
         self.wall_position_right_1 = (1023, 2)
         self.wall_position_right_2 = (1023, 542)
 
-        # constantes de la serpiente
 
-        # longitud inicial
+
+        ######## Snake ########
+
+        # initial length
         self.length_initial = 5
 
         # alto, ancho y margen
@@ -71,7 +96,8 @@ class Settings():
         # contador para evitar movimientos bruscos en el mismo segundo
         self.counter_time_between_movements = 0
 
-        # constantes de la tabla de puntuación
+
+        ######## constantes de la tabla de puntuación ########
         self.board_width = 30
         self.board_height = 10
         self.board_point_initial = 0
@@ -87,7 +113,9 @@ class Settings():
         # por qué el usurioa no inicia el juego escribiento su nombre
         self.write_finish = False
 
-        # constantes del menú principal
+
+
+        ######## constantes del menú principal ########
         self.text_mainboard_1 = "Play 1"
         self.text_mainboard_2 = "Play 2"
         self.text_mainboard_3 = "Exit"

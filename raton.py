@@ -1,44 +1,84 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# name of the file raton.py
+"""
+Mouse of the game. Not the cursor.
+"""
 
-# se importan los módulo
+# import modules
 import pygame
-# se importa el método para número aleatorios
+# import random numbers
 from random import randint
 
 
 class Raton():
-    """Representa a un ratón con un cuadrado."""
+    """
+    The mouse.
 
-    def __init__(self, screen, settings, position_x_raton, position_y_raton):
-        """Inicializa los atribuos de la clase"""
+    Utilize a segment to represent the mouse, this will be eaten by the snake.
+    """
+
+    def __init__(self, screen, settings):
+        """Store attributes."""
+        # store screen and settings like an attributes
         self.screen = screen
         self.settings = settings
 
-        # crea un cuadrado
-        self.image = pygame.Surface([self.settings.raton_width, self.settings.raton_height])
+        # size
+        self.width = self.settings.raton_width
+        self.height = self.settings.raton_height
 
-        # se pinta con el color establecido
-        self.image.fill(self.settings.raton_color)
+        # color
+        self.color = self.settings.raton_color
 
-        # almacena el valor del ratón
+        # range positions
+        # first range position of x and y
+        self.range_xy = self.settings.raton_range_pos_xy
+        # second range position of x and y
+        self.range_x = self.settings.raton_range_pos_x
+        self.range_y = self.settings.raton_range_pos_y
+
+        # segment that will represent the mouse
+        self.image = pygame.Surface((self.width, self.height))
+
+        # fill mouse with color
+        self.image.fill(self.color)
+
+        # value of mouse
         self.point = settings.raton_point
 
-        # se consigue el rectángulo de la imágen
+        # take rect of the segment
         self.rect = self.image.get_rect()
 
-        # se fija su posición
-        self.rect.x = position_x_raton
-        self.rect.y = position_y_raton
+        # set position
+        self.change_position()
+
+
+    def change_position(self):
+        """Set position randomly."""
+        self.rect.x = randint(self.range_xy, self.range_x)
+        self.rect.y = randint(self.range_xy, self.range_y)
 
 
     def increase_point(self, settings):
-        """Incremento el puntaje de la table de puntuación"""
+        """Increase the score of scoreboard."""
         self.settings.board_point_initial += self.point
 
 
+    def  is_colliding(self):
+        """Return True wheter it's colliding, otherwise False."""
+        # take all segments of snake
+        segments = self.settings.snake_build_helper[:]
+        # iterate over each segments
+        for segment in segments:
+            # check with their rectangles if they're colliding
+            if self.rect.colliderect(segment.rect):
+                # if so, return True
+                return True
+        # otherwise, return False
+        return False
+
+
     def blitme(self):
-        """Dibuja el ratón en su posición actual en la pantalla."""
+        """Blit mouse on its current position."""
         self.screen.blit(self.image, self.rect)

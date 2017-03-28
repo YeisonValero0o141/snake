@@ -1,56 +1,57 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# name of the file run_snake.py
+"""
+Snake Game
+"""
 
-# se importan los módulos
+# import modules
+# import random number from standard library
+from random import randint
+# import pygame library
 import pygame
-# se importa las constantes del juego
+# import game's settings
 from settings import Settings
 # se importa las funcions del juego con el alias de fs
+# import game's functions with the alias of fs
 import functions_snake as fs
 # se importa el módulo para tratar muchos sprite como grupos
 from pygame.sprite import Group
-# se importa el ratón
+# import mouse
 from raton import Raton
-# se importa el método para número aleatorios
-from numpy.random import randint
-# se importa la tabla de puntuación
+# import scoreboard
 from score_board import ScoreBoard
-# se importa el menú principal
+# import main menu
 from mainboard import MainBoard
 
 
 def main():
-    """La función que correrá el juego."""
-    # se inicializa pygame
+    """The function that will run the game."""
+    # initialize pygame's engine
     pygame.init()
 
-    # se instacia la clase Settings
+    # instance Settins class
     settings = Settings()
 
     # se establece el tamaño de la ventana
+    # set size's screen and open it
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
-    # fija el título de la ventana
+    # set title's screen
     pygame.display.set_caption("Snake")
 
-    # se instacia la tabla de puntuación
+    # instance scoreboard
     score_board = ScoreBoard(screen, settings)
 
-    # se instancia el menú principal
+    # instance main menu
     mainboard = MainBoard(screen, settings)
 
-    # crea nuevas coordenas aleatorias para la posición del ratón
-    position_x_raton = randint(8, 1007)
-    position_y_raton= randint(8, 530)
-
     # se instacia el ratón
-    raton = Raton(screen, settings, position_x_raton, position_y_raton)
+    raton = Raton(screen, settings)
 
     # el grupo que contendrá todos los segmentos de la serpiente
     snake_whole = Group()
 
-    # reloj de pygame
+    # pygame's clock
     clock = pygame.time.Clock()
 
     # variable para ser usada para la llamada de fs.build_snake_whole una sola vez
@@ -140,36 +141,24 @@ def main():
                 # vuelve a armar a la serpiente en su posición inicial
                 fs.build_snake_whole(screen, snake_whole, settings)
 
-            # verifica si hay colisiones y guarda valor retornado
-            collisions_raton = fs.check_collisions(raton, snake_whole, screen, settings)
-
-            # si hubo colisiones
-            if collisions_raton:
-                # reproduce el sonido de mordisco
+            # check if one bitten have occurred
+            if raton.is_colliding():
+                # play bite sound
                 settings.snake_head.sound_bite.play()
 
-                # crea nuebas coordenas aleatorias para la posición del ratón
-                position_x_raton = randint(8, 1003)
-                position_y_raton= randint(8, 522)
+                # increase lenght of snake
+                fs.increase_lenght_of_snake(screen, settings, snake_whole)
 
-                # se instacia el ratón
-                raton = Raton(screen, settings, position_x_raton, position_y_raton)
+                # change position of mouse
+                raton.change_position()
 
-                # aumenta el puntaje de la tabla de puntuación
+                # increase score of scoreboard
                 raton.increase_point(settings)
 
-                # verifica si el ratón ocupa el espacio de la serpiente
-                position_available = fs.avoid_raton_body_of_snake(raton, settings)
-
-                while position_available:
-                    # crea nuebas coordenas aleatorias para la posición del ratón
-                    position_x_raton = randint(7, 1003)
-                    position_y_raton= randint(7, 522)
-
-                    # se instacia el ratón
-                    raton = Raton(screen, settings,     position_x_raton, position_y_raton)
-                    # se vuelve a llamar a la función para evitar un bucle infinito
-                    position_available = fs.avoid_raton_body_of_snake(raton, settings)
+                # call the method again to know if it's still colliding
+                while raton.is_colliding():
+                    # change position of mouse
+                    raton.change_position()
 
 
             # actualiza todos los objetos en la pantalla
@@ -252,9 +241,10 @@ def main():
                     position_available = fs.avoid_raton_body_of_snake(raton, settings)
 
 
-            # actualiza todos los objetos en la pantalla
+            # update all objects on screen
             fs.update_screen(screen, raton, snake_whole, raton, settings, score_board, play_2=True)
 
 
 if __name__ == "__main__":
+    # run game
     main()

@@ -14,7 +14,7 @@ from numpy.random import randint
 # se importa el método sleep de time
 from time import sleep
 
-## funciones para dibujar el entorno del juego ##
+####### function to draw the walls #######
 def draw_wall_up(screen, settings):
     """Dibuja el muero de la parte superior de la pantalla."""
     pygame.draw.line(screen, (settings.wall_color), (settings.wall_position_up_1), (settings.wall_position_up_2), settings.wall_size)
@@ -47,48 +47,7 @@ def draw_walls(screen, settings):
     draw_wall_right(screen, settings)
 
 
-# FUNCIONES PARA EL RATÓN
-def check_collisions(raton, snake_whole, screen, settings):
-    """Verifica si la serpiente colisiona con el ratón"""
-    # guarda los atributos de la clase como una variable de la función
-    snakes = settings.snake_build_helper
-    snake = settings.snake_head
-    last_snake_segment = settings.snake_tail
-    # verifica si la coordenadas de los dos rectángulos colisiona
-    if raton.rect.colliderect(snake.rect):
-
-        # se fija la posición del nuevo segmento que será creado al final de la cola
-        position_x = last_snake_segment.rect.x
-        position_y = last_snake_segment.rect.y
-
-        # crea un crea un nuevo segmento al final de la serpiente
-        last_snake_segment = Snake(screen, settings, position_x, position_y)
-
-        # inserta el segmento al final de la lista
-        snakes.append(last_snake_segment)
-
-        # añade el nuevo segmento de la serpiente al grupo
-        snake_whole.add(last_snake_segment)
-
-        # actualiza la lista  y los atributos almacenada en la clase
-        settings.snake_build_helper = snakes
-        snake = settings.snake_head
-        last_snake_segment = settings.snake_tail
-
-        # retorna True para ser usado en el bucle principal del juego
-        return True
-
-def avoid_raton_body_of_snake(raton, settings):
-    """Evita que el ratón aparezca en una posición ocupada por la serpiente."""
-    # guarda el atributo como variable de la función
-    snakes = settings.snake_build_helper[:]
-    for x in range(len(snakes)):
-        first_snake_segment = snakes.pop()
-        if raton.rect.colliderect(first_snake_segment.rect):
-            return True
-
-
-# FUNCIONES PARA LA SERPIENTE
+####### SNAKE #######
 def build_snake_whole(screen, snake_whole, settings):
     """"Construye a la serpiente."""
     snakes = settings.snake_build_helper
@@ -271,6 +230,37 @@ def snake_achieve_walls(screen, settings):
 
     # actualiza la variable de la clase
     settings.snake_head = snake
+
+
+def increase_lenght_of_snake(screen, settings, snake_whole):
+    """
+    Increase snake by one segment.
+
+    The segment, it will be appended at last segment.
+    """
+    # take all segments
+    segments = settings.snake_build_helper
+    # take the last segments to use its position to append the new segment
+    last_segment = settings.snake_tail
+
+    # utilize last_segment's position to set position of the new segment
+    position_x = last_segment.rect.x
+    position_y = last_segment.rect.y
+
+    # create new sement at the end of the snake (the tail)
+    last_snake_segment = Snake(screen, settings, position_x, position_y)
+
+    # append segment in the list of segments
+    segments.append(last_snake_segment)
+
+    # add new the segment in the snake
+    snake_whole.add(last_snake_segment)
+
+    # update list of segments
+    settings.snake_build_helper = segments
+    # and the last segment (the tail)
+    settings.snake_tail = last_snake_segment
+
 
 # FUNCIONES PARA EL MENÚ PRINCIPAL
 def move_cursor(mainboard, settings):
