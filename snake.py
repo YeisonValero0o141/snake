@@ -41,14 +41,3 @@ class Snake(Sprite):
 
         # load bite sound
         self.sound_bite = pygame.mixer.Sound('sonidos/mordisco.wav')
-
-
-    def increase_lenght(self):
-        """Increase one segment of leght."""
-        # take list of all segments
-        segments = self.settings.snake_build_helper
-        print(segments)
-        # append a new segment
-        segments.append(self)
-        # update segments of settings
-        self.settings = segments
