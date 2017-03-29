@@ -66,7 +66,7 @@ class Raton():
         self.settings.board_point_initial += self.point
 
 
-    def  is_colliding(self):
+    def is_colliding(self):
         """Return True wheter it's colliding, otherwise False."""
         # take all segments of snake
         segments = self.settings.snake_build_helper[:]

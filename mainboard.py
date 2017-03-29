@@ -7,8 +7,6 @@
 # importa la fuente de pygame
 import pygame.font
 
-from functions_snake import write_your_name
-
 class MainBoard():
     """La clase representa a una menú principal."""
 
@@ -43,6 +41,7 @@ class MainBoard():
         self.name_beater = self.load_file(self.filename_2, True)
 
         # fija que se usará la tipografía de pygame por defecto
+        # take font
         self.font = pygame.font.SysFont(None, 60)
 
         # renderiza el texto 1

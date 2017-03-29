@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# name of the file functions_snake.py
+"""Function of the game.
 
-# se importa los módulos
-import pygame, sys
-# se importa la clase serpiente
-from snake import Snake
-# se importa la clase Raton
-from raton import Raton
-# se importa el método para número aleatorios
-from numpy.random import randint
-# se importa el método sleep de time
+Functions such as: check events of game, draw all objects, close
+game, and so on.
+"""
+
+# import modules
+# sys from library standard
+import sys
+# sleep function of time
 from time import sleep
+# pygame library
+import pygame
+# Snake class
+from snake import Snake
+# Raton (mouse) class
+from raton import Raton
 
 ####### function to draw the walls #######
 def draw_wall_up(screen, settings):
@@ -52,54 +57,60 @@ def build_snake_whole(screen, snake_whole, settings):
     """"Build snake."""
     # list that will contain all segments
     snakes = settings.snake_build_helper
-    # reset move. This is useful when user start to play again in a different or same move
+    # reset move. This is useful when user start to play again
+    # in a different or same mode of game
     reset_movements_settings(settings)
-    for i in range(settings.length_initial):
-        # define la posición x
-        position_x = settings.initial_position_x
-        # define la posición y
-        position_y = settings.initial_position_y
-        # instancia el segmento de la serpiente
-        part_snake = Snake(screen, settings, position_x, position_y)
-        # lo añade a la lista
-        snakes.append(part_snake)
-        # la lista es añadida al grupo
-        snake_whole.add(snakes)
 
-    # guarda los segmentos de la serpiente recogidos en la clase Settings
+    # loop up through the initial lenght
+    for i in range(settings.length_initial):
+        # position x and y
+        position_x = settings.initial_position_x
+        position_y = settings.initial_position_y
+
+        # create segment
+        part_snake = Snake(screen, settings, position_x, position_y)
+        # add it to the list of segments
+        snakes.append(part_snake)
+
+    # add list of segments to snake group
+    snake_whole.add(part_snake)
+    # update list of segments in settings
     settings.snake_build_helper = snakes
 
-# función para mover al a serpiente según move_keydown
-def move_snake_whole(screen, raton, snake_whole, settings):
-    """Elimina el último segmento de la serpiente y crea uno nuevo al comienzo.
-    Dando la ilusión de movimiento."""
-    # guarda los atributos de la clase como  variables de la función
-    snakes = settings.snake_build_helper
-    snake = settings.snake_head
-    last_snake_segment = settings.snake_tail
 
-    # toma el último segmento de la serpiente
+def move_snake_whole(screen, raton, snake_whole, settings):
+    """
+    Move snake.
+
+    Delete the last segment of snake to emulate that snake is moving.
+    """
+    # list of segments
+    snakes = settings.snake_build_helper
+    # snake's head
+    snake = settings.snake_head
+
+    # take snake's tail (last segment)
     last_snake_segment = snakes.pop()
 
-    # elimina el último segmento
+    # delete the last segment
     snake_whole.remove(last_snake_segment)
 
-    # se fija la posición del nuevo segmento que será creado
+    # set new segment's position (head)
     position_x = snakes[0].rect.x + settings.change_position_x
     position_y = snakes[0].rect.y + settings.change_position_y
 
-    # crea un crea un nuevo segmento de la serpiente
+    # head
     snake = Snake(screen, settings, position_x, position_y)
 
-    # inserta el segmento al comienzo de la lista
+    # insert head like the first segment (head)
     snakes.insert(0, snake)
 
-    # añade el nuevo segmento de la serpiente al grupo
+    # add new segment to snake group
     snake_whole.add(snake)
 
-    # actualiza la lista almacenada en la clase
+    # update list of segments in settings
     settings.snake_build_helper = snakes
-    # actualiza los atributos de la clase
+    # update head and tail in settings
     settings.snake_head = snake
     settings.snake_tail = last_snake_segment
 
@@ -198,17 +209,20 @@ def move_keydown(event, counter, settings):
             del traceback_movements[0]
             del counter_move_now[0]
 
-    elif event.key == pygame.K_q:
-        exit()
-
     # actualiza la lista de la clase
     traceback_movements = settings.traceback_movements
     settings.traceback_counter = counter_move_now
 
 
-def check_colliions_snake_wall(settings):
-    """Comprueba si la serpiente alcanzó cualquieras de los muros. Devuelve True es así, False sino."""
+def snake_collide_with_walls(settings):
+    """
+    Check wheter snake collide with the walls or not.
+
+    Return True if so, otherwise return False.
+    """
+    # take snake's head
     snake = settings.snake_head
+    # return True if at least colllide with one wall
     if snake.rect.top < 0:
         return True
     elif snake.rect.bottom > 545:
@@ -217,6 +231,7 @@ def check_colliions_snake_wall(settings):
         return True
     elif snake.rect.right > 1028:
         return True
+    # otherwise, return False
     else:
         return False
 
@@ -322,25 +337,25 @@ def move_cursor(mainboard, settings):
 ####     IMPORTANT FUNCTIONS     ####
 #####################################
 def update_screen(screen, raton, snake_whole, ratones, settings, score_board, play_2=False):
-    """Actualiza la pantalla."""
-    # pinta el color en la pantalla
+    """Update screen."""
+    # fill screen with the background color
     screen.fill(settings.background_color)
 
-    # si no se le pasa ningún paramétro
+    # if it's play 2 mode
     if not play_2:
-        # dibuja lineas por muros en los bordes de la pantalla
+        # draw the walls on borders
         draw_walls(screen, settings)
 
-    # dibuja la tabla de puntuación
+    # blit scoreboard
     score_board.blitme()
 
-    # dibuja el ratón
+    # blit mouse
     raton.blitme()
 
-    # dibuja la serpiente en la pantalla
+    # draw snake
     snake_whole.draw(screen)
 
-    # dibuja los cambios en la pantalla
+    # flip screen
     pygame.display.flip()
 
 

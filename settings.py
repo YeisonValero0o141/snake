@@ -27,7 +27,6 @@ class Settings():
         self.background_color = (96, 125, 139)
 
 
-
         ######## Mouse ########
         # size
         self.raton_width = 16
@@ -49,7 +48,6 @@ class Settings():
         self.raton_range_pos_y2 = 522
 
 
-
         ######## Wall ########
         self.wall_size = 10
         self.wall_color = (33, 33, 33)
@@ -62,7 +60,6 @@ class Settings():
         self.wall_position_left_2 = (0, 542)
         self.wall_position_right_1 = (1023, 2)
         self.wall_position_right_2 = (1023, 542)
-
 
 
         ######## Snake ########
