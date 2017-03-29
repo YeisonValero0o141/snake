@@ -49,8 +49,10 @@ def draw_walls(screen, settings):
 
 ####### SNAKE #######
 def build_snake_whole(screen, snake_whole, settings):
-    """"Construye a la serpiente."""
+    """"Build snake."""
+    # list that will contain all segments
     snakes = settings.snake_build_helper
+    # reset move. This is useful when user start to play again in a different or same move
     reset_movements_settings(settings)
     for i in range(settings.length_initial):
         # define la posición x
@@ -114,21 +116,34 @@ def reset_movements_settings(settings):
 
 
 def check_snake_bite_itself(settings):
-    """Comprueba si la serpiente se mueve sobre si misma."""
-    # guarda los atribuos como variables de la serpiente
-    snake = settings.snake_head
+    """
+    Check if snake bite itself.
+
+    If so, return True. Otherwise return False.
+    """
+    # take a copy of list of segments
     snakes = settings.snake_build_helper[:]
+    # and snake's head
+    snake_head = settings.snake_head
+    # iterate over its lenght
     for x in range(len(snakes)):
+        # the head doesn't count
         if x == 0:
+            # do nothing
             pass
         else:
+            # pop the last segment
             last_snake_segment = snakes.pop()
-            if snake.rect.colliderect(last_snake_segment.rect):
-                # cambia la bandera para que aparezca el menú principal
+            # check if it collide
+            if snake_head.rect.colliderect(last_snake_segment.rect):
+                # change flags to appears the main menu
                 settings.main_menu = True
                 settings.play_1 = False
                 settings.play_2 = False
+                # return True
                 return True
+    # otherwise, return False
+    return False
 
 # Funciones para mover la serpiente con los eventos de las flechas serpiente
 # y verifica si la serpiente choca con los muros
@@ -304,7 +319,7 @@ def move_cursor(mainboard, settings):
                 exit()
 
 #####################################
-###     FUNCIONES IMPORTANTES     ###
+####     IMPORTANT FUNCTIONS     ####
 #####################################
 def update_screen(screen, raton, snake_whole, ratones, settings, score_board, play_2=False):
     """Actualiza la pantalla."""

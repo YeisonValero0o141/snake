@@ -69,7 +69,7 @@ def main():
         play_1 = settings.play_1
         play_2 = settings.play_2
 
-        # limita el número de frames por segundos
+        # set fps
         clock.tick(10)
 
         if main_menu:
@@ -84,23 +84,24 @@ def main():
                 # cambiamos su valor para que no se vuelva a ejecutar
                 call_one_time = 2
 
-            # actualiza la posición de la serpiente
+            # update snake's position
             snake_whole.update()
 
-            # actualiza la tabla de puntuación
+            # update scoreboard
             score_board.update()
 
-            # incrementa el contador y actualiza el atributo de la clase
+            # increase counter
             counter += 1
+            # update counter of movements of settings
             settings.counter_time_between_movements = counter
 
-            # verifica si el usuario quiere cerrar el juego o mover la serpiente
+            # check events of game
             fs.check_events(counter, settings)
 
-            # mueve la serpiente
+            # move snake
             fs.move_snake_whole(screen, raton, snake_whole, settings)
 
-            # verifica si la serpiente se muerde a sí misma
+            # see if snake is biting itself
             snake_bite_itself = fs.check_snake_bite_itself(settings)
 
             if snake_bite_itself:

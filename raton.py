@@ -32,11 +32,12 @@ class Raton():
         self.color = self.settings.raton_color
 
         # range positions
-        # first range position of x and y
-        self.range_xy = self.settings.raton_range_pos_xy
-        # second range position of x and y
-        self.range_x = self.settings.raton_range_pos_x
-        self.range_y = self.settings.raton_range_pos_y
+        # ranges position of x and y
+        self.range_x1 = self.settings.raton_range_pos_x1
+        self.range_x2 = self.settings.raton_range_pos_x2
+        # ranges of positions of y
+        self.range_y1 = self.settings.raton_range_pos_y1
+        self.range_y2 = self.settings.raton_range_pos_y2
 
         # segment that will represent the mouse
         self.image = pygame.Surface((self.width, self.height))
@@ -56,8 +57,8 @@ class Raton():
 
     def change_position(self):
         """Set position randomly."""
-        self.rect.x = randint(self.range_xy, self.range_x)
-        self.rect.y = randint(self.range_xy, self.range_y)
+        self.rect.x = randint(self.range_x1, self.range_x2)
+        self.rect.y = randint(self.range_y1, self.range_y2)
 
 
     def increase_point(self, settings):

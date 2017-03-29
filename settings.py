@@ -21,7 +21,7 @@ class Settings():
         Store all data"""
         ######## Screen ########
         # size
-        self.screen_width = 1023
+        self.screen_width = 1025
         self.screen_height = 545
         # background color
         self.background_color = (96, 125, 139)
@@ -36,12 +36,17 @@ class Settings():
         self.raton_color = (121, 85, 72)
         # score
         self.raton_point = 1
-        # first range position of x and y position
-        self.raton_range_pos_xy = 8
+
+        # positions of mouse
+        # first range position of x
+        self.raton_range_pos_x1 = 6
         # second range position of x
-        self.raton_range_pos_x = 1007
+        self.raton_range_pos_x2 = 1004
+
+        # first range position of x
+        self.raton_range_pos_y1 = 9
         # second range position of y
-        self.raton_range_pos_y = 530
+        self.raton_range_pos_y2 = 522
 
 
 
