@@ -53,108 +53,36 @@ def draw_walls(screen, settings):
 
 
 ####### SNAKE #######
-def build_snake_whole(screen, snake_whole, settings):
-    """"Build snake."""
-    # list that will contain all segments
-    snakes = settings.snake_build_helper
-    # reset move. This is useful when user start to play again
-    # in a different or same mode of game
-    reset_movements_settings(settings)
-
-    # loop up through the initial lenght
-    for i in range(settings.length_initial):
-        # position x and y
-        position_x = settings.initial_position_x
-        position_y = settings.initial_position_y
-
-        # create segment
-        part_snake = Snake(screen, settings, position_x, position_y)
-        # add it to the list of segments
-        snakes.append(part_snake)
-
-    # add list of segments to snake group
-    snake_whole.add(part_snake)
-    # update list of segments in settings
-    settings.snake_build_helper = snakes
-
-
-def move_snake_whole(screen, raton, snake_whole, settings):
+def reset_values_settings(settings):
     """
-    Move snake.
+    Reset values tracer of movements, positions, score and segments.
 
-    Delete the last segment of snake to emulate that snake is moving.
+    This make sure that when user start again to play snake
+    appears in the initial position and not the last one
     """
-    # list of segments
-    snakes = settings.snake_build_helper
-    # snake's head
-    snake = settings.snake_head
-
-    # take snake's tail (last segment)
-    last_snake_segment = snakes.pop()
-
-    # delete the last segment
-    snake_whole.remove(last_snake_segment)
-
-    # set new segment's position (head)
-    position_x = snakes[0].rect.x + settings.change_position_x
-    position_y = snakes[0].rect.y + settings.change_position_y
-
-    # head
-    snake = Snake(screen, settings, position_x, position_y)
-
-    # insert head like the first segment (head)
-    snakes.insert(0, snake)
-
-    # add new segment to snake group
-    snake_whole.add(snake)
-
-    # update list of segments in settings
-    settings.snake_build_helper = snakes
-    # update head and tail in settings
-    settings.snake_head = snake
-    settings.snake_tail = last_snake_segment
-
-
-def reset_movements_settings(settings):
-    """Resetea los valores que fijan el movimiento de la
-    serpiente para que cuándo muera si
-    se vuelva construir se mueva como al comienzo."""
-    # resetea position de la serpiente a la inicial
+    # come back to the initial position
     settings.change_position_y = 0
     settings.change_position_x = settings.snake_width + settings.snake_margin
-    # resetea el restreador de movimiento
+    # score
+    settings.board_point_initial = 0
+    # list of segments
+    settings.snake_build_helper = []
+    # tracer of movements
     settings.traceback_movements = ["K_RIGHT"]
 
 
-def check_snake_bite_itself(settings):
-    """
-    Check if snake bite itself.
+def is_snake_dead(snake_whole, settings, play_1=False):
+    """If snake is dead change flag variable, if not, keep the
+    same vaue."""
+    # first check is snake bite itself
+    if snake_whole.is_biting_itself():
+        return True
+    # snake just collide with walls in the first mode game
+    elif snake_whole.does_collide_with_walls() and play_1 == True:
+        return True
+    else:
+        return False
 
-    If so, return True. Otherwise return False.
-    """
-    # take a copy of list of segments
-    snakes = settings.snake_build_helper[:]
-    # and snake's head
-    snake_head = settings.snake_head
-    # iterate over its lenght
-    for x in range(len(snakes)):
-        # the head doesn't count
-        if x == 0:
-            # do nothing
-            pass
-        else:
-            # pop the last segment
-            last_snake_segment = snakes.pop()
-            # check if it collide
-            if snake_head.rect.colliderect(last_snake_segment.rect):
-                # change flags to appears the main menu
-                settings.main_menu = True
-                settings.play_1 = False
-                settings.play_2 = False
-                # return True
-                return True
-    # otherwise, return False
-    return False
 
 # Funciones para mover la serpiente con los eventos de las flechas serpiente
 # y verifica si la serpiente choca con los muros
@@ -212,28 +140,6 @@ def move_keydown(event, counter, settings):
     # actualiza la lista de la clase
     traceback_movements = settings.traceback_movements
     settings.traceback_counter = counter_move_now
-
-
-def snake_collide_with_walls(settings):
-    """
-    Check wheter snake collide with the walls or not.
-
-    Return True if so, otherwise return False.
-    """
-    # take snake's head
-    snake = settings.snake_head
-    # return True if at least colllide with one wall
-    if snake.rect.top < 0:
-        return True
-    elif snake.rect.bottom > 545:
-        return True
-    elif snake.rect.left < 0:
-        return True
-    elif snake.rect.right > 1028:
-        return True
-    # otherwise, return False
-    else:
-        return False
 
 
 def snake_achieve_walls(screen, settings):
@@ -410,6 +316,13 @@ def draw_record_name(mainboard):
     # dibuja el texto y las más alta puntuación
     mainboard.blit_text_score()
     mainboard.blit_score()
+
+
+def change_flags(settings):
+    """Change flags to stop game and appear main menu."""
+    settings.main_menu = True
+    settings.play_1 = False
+    settings.play_2 = False
 
 
 def wait_write_name(screen, settings, mainboard, score_board):

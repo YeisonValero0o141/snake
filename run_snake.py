@@ -16,7 +16,7 @@ from settings import Settings
 # import game's functions with the alias of fs
 import functions_snake as fs
 # se importa el módulo para tratar muchos sprite como grupos
-from pygame.sprite import Group
+from snake import SnakeWhole
 # import mouse
 from raton import Raton
 # import scoreboard
@@ -39,23 +39,20 @@ def main():
     # set title's screen
     pygame.display.set_caption("Snake")
 
-    # instance scoreboard
+    # scoreboard
     score_board = ScoreBoard(screen, settings)
 
-    # instance main menu
+    # main menu
     mainboard = MainBoard(screen, settings)
 
-    # se instacia el ratón
+    #  mouse
     raton = Raton(screen, settings)
 
-    # el grupo que contendrá todos los segmentos de la serpiente
-    snake_whole = Group()
+    # snake
+    snake_whole = SnakeWhole(screen, settings, fs)
 
     # pygame's clock
     clock = pygame.time.Clock()
-
-    # variable para ser usada para la llamada de fs.build_snake_whole una sola vez
-    call_one_time = settings.call_one_time
 
     # counter to avoid sudden movemensts
     counter = settings.counter_time_between_movements
@@ -77,13 +74,6 @@ def main():
 
         if play_1:
 
-            if call_one_time == 1:
-
-                # armamos la serpiente completa
-                fs.build_snake_whole(screen, snake_whole, settings)
-                # cambiamos su valor para que no se vuelva a ejecutar
-                call_one_time = 2
-
             # update snake's position
             snake_whole.update()
 
@@ -92,6 +82,7 @@ def main():
 
             # increase counter
             counter += 1
+
             # update counter of movements of settings
             settings.counter_time_between_movements = counter
 
@@ -99,52 +90,23 @@ def main():
             fs.check_events(counter, settings)
 
             # move snake
-            fs.move_snake_whole(screen, raton, snake_whole, settings)
+            snake_whole.move()
 
             # see if snake is biting itself
-            snake_bite_itself = fs.check_snake_bite_itself(settings)
+            snake_bite_itself = snake_whole.is_biting_itself()
 
-            if snake_bite_itself:
-                # pausa el juego
-                fs.pause(0.40)
-                # vacía el grupo
-                snake_whole.empty()
-                # vacía la lista
-                settings.snake_build_helper = []
-                # verifica si se batió un record
-                mainboard.check_beat_record()
-                fs.wait_write_name(screen, settings, mainboard, score_board)
-                # se resetea el puntaje
-                settings.board_point_initial = 0
-                # vuelve counstruir a la serpiente en su posición inicial
-                fs.build_snake_whole(screen, snake_whole, settings)
-
-            # check if snake collide with the walls
-            collisions_snake_walls = fs.snake_collide_with_walls(settings)
-
-            # if so, change some flags
-            if collisions_snake_walls:
+            if fs.is_snake_dead(snake_whole, settings, play_1=True):
                 # pause game
                 fs.pause(0.40)
                 # change flags to appear main menu
-                settings.main_menu = True
-                settings.play_1 = False
-                settings.play_2 = False
-
-                # remove all segments of snake
-                snake_whole.empty()
-                # reset list of segments
-                settings.snake_build_helper = []
-                # verifica si se batió un record
+                fs.change_flags(settings)
+                # reinstance snake to restore inital values
+                snake_whole = SnakeWhole(screen, settings, fs)
+                # check if a record was beat
                 mainboard.check_beat_record()
-                # wait until user finish to write his/her name
+                # if so, wait until user finish to write his/her name
                 fs.wait_write_name(screen, settings, mainboard,
                                                     score_board)
-                # reset score
-                settings.board_point_initial = 0
-
-                # build snake on its initial position
-                fs.build_snake_whole(screen, snake_whole, settings)
 
             # check if one bitten have occurred
             if raton.is_colliding():
@@ -171,13 +133,6 @@ def main():
 
         elif play_2:
 
-            if call_one_time == 1:
-
-                # armamos la serpiente completa
-                fs.build_snake_whole(screen, snake_whole, settings)
-                # cambiamos su valor para que no se vuelva a ejecutar
-                call_one_time = 2
-
             # actualiza la posición de la serpiente
             snake_whole.update()
 
@@ -195,7 +150,7 @@ def main():
             fs.move_snake_whole(screen, raton, snake_whole, settings)
 
             # verifica si la serpiente se muerde a sí misma
-            snake_bite_itself = fs.check_snake_bite_itself(settings)
+            snake_bite_itself = snake_whole.is_biting_itself(fs)
 
             if snake_bite_itself:
                 # pausa el juego

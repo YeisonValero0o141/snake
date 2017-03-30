@@ -91,6 +91,8 @@ class Settings():
         self.snake_head = None
         # último segmento de la serpiente
         self.snake_tail = None
+        # flag variable to know if snake is dead
+        self.snake_is_dead = False
 
         # listas para imperdir cambios bruscos en el manejo de la serpiente
         self.traceback_movements = ["K_RIGHT"]
