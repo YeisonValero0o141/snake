@@ -20,39 +20,21 @@ from snake import Snake
 from raton import Raton
 
 ####### function to draw the walls #######
-def draw_wall_up(screen, settings):
-    """Dibuja el muero de la parte superior de la pantalla."""
-    pygame.draw.line(screen, (settings.wall_color), (settings.wall_position_up_1), (settings.wall_position_up_2), settings.wall_size)
-
-
-def draw_wall_down(screen, settings):
-    """Dibuja el muero de la parte inferior de la pantalla."""
-    pygame.draw.line(screen, (settings.wall_color), (settings.wall_position_down_1), (settings.wall_position_down_2), settings.wall_size)
-
-
-def draw_wall_left(screen, settings):
-    """Dibuja el muro del lado lateral izquierdo de la pantalla"""
-    pygame.draw.line(screen, (settings.wall_color), (settings.wall_position_left_1), (settings.wall_position_left_2), settings.wall_size)
-
-
-def draw_wall_right(screen, settings):
-    """Dibuja el muro del lado lateral derecha de la pantalla."""
-    pygame.draw.line(screen, (settings.wall_color), (settings.wall_position_right_1), (settings.wall_position_right_2), settings.wall_size)
-
-
 def draw_walls(screen, settings):
-    """Dibuja los muro a los borde de la pantalla."""
+    """Draw walls on border of screen."""
+    # list with all positions of walls
+    positions = settings.wall_positions
+    # wall's size
+    size = settings.wall_size
+    # wall's color
+    color = settings.wall_color
+    # iterate over the list of all positions
+    for position in positions:
+        # draw wall
+        pygame.draw.line(screen, color, position[0], position[1], size)
 
-    draw_wall_up(screen, settings)
 
-    draw_wall_down(screen, settings)
-
-    draw_wall_left(screen, settings)
-
-    draw_wall_right(screen, settings)
-
-
-####### SNAKE #######
+####### function about snake #######
 def reset_values_settings(settings):
     """
     Reset values tracer of movements, positions, score and segments.
@@ -295,7 +277,7 @@ def update_menu(screen, settings, score_board, mainboard):
     # dibuja el nombre del jugador con la puntuación más alta
     mainboard.blit_name()
 
-    # dibuja lineas por muros en los bordes de la pantalla
+    # dra walls on border of screen
     draw_walls(screen, settings)
 
     # dibuja la tabla de puntuación

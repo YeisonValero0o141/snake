@@ -52,6 +52,7 @@ class Settings():
         self.wall_size = 10
         self.wall_color = (33, 33, 33)
         # fija la pisición del muro en los bordes de la pantalla. Donde 1 es posición inicial y 2 es posición final
+        # set position of walls. 1 it's start position and 2 it's the last one
         self.wall_position_up_1 = (0, 3)
         self.wall_position_up_2 = (1023, 3)
         self.wall_position_down_1 = (0, 542)
@@ -60,6 +61,14 @@ class Settings():
         self.wall_position_left_2 = (0, 542)
         self.wall_position_right_1 = (1023, 2)
         self.wall_position_right_2 = (1023, 542)
+
+        # will contains all position of walss
+        self.wall_positions = [
+            [self.wall_position_up_1, self.wall_position_up_2],
+            [self.wall_position_down_1, self.wall_position_down_2],
+            [self.wall_position_right_1, self.wall_position_right_2],
+            [self.wall_position_left_1, self.wall_position_left_2]
+         ]
 
 
         ######## Snake ########
