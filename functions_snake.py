@@ -130,8 +130,6 @@ def move_keydown(event, counter, settings, snake_whole):
             clean_tracers(traceback_movements, counter_move_now)
 
 
-
-
 def snake_achieve_walls(screen, settings):
     """Si la serpiente llega a la parte superior de la pantalla aparecerá en la parte inferior.
     Lo mismo va para todos los lados de la pantalla."""
@@ -305,34 +303,42 @@ def wait_write_name(screen, settings, mainboard, score_board):
         draw_record_name(mainboard)
 
 
-def limit_words(settings, number=10):
-    """Elimina los items de la lista hasta que sea menor al parámetro pasado."""
-    # almacena la lista de la clase y el número de letras permitida
+def limit_words(settings):
+    """
+    Delete all characters of name of beater wheter it is large than it is allowed.
+    """
+    # take list that contains name of beater
     name = settings.name_of_beater
+    # take list allowed number of character
     number_letter = settings.allowed_number_letter
+    # if larger that it's allwed
     if len(name) > number_letter:
+        # pop the last character
         name.pop()
 
 
 def check_events(counter, settings, snake_whole):
-    """Verifica si el usuario desea salir del juego o quiere mover a la serpiente."""
-    # Toma todos los eventos del juego
+    """
+    Check events of game.
+    Like move snake or close game.
+    """
+    # take all events of game
     for event in pygame.event.get():
-        # si el usuario clickea la x en la barra de título
+        # if user press x in the tile bar
         if event.type == pygame.QUIT:
             exit()
-        # si el usuario aprienta cualquier botón
+        # wheter user press any buttons
         elif event.type == pygame.KEYDOWN:
             move_keydown(event, counter, settings, snake_whole)
 
 
 def exit():
-    """Se sale del juego."""
+    """Close game."""
     sys.exit()
 
 
 def pause(seconds):
-    """Pausa el juego por n segundos."""
+    """Pause game by n seconds."""
     sleep(seconds)
 
 

@@ -71,137 +71,62 @@ def main():
         if main_menu:
             fs.main_menu(screen, settings, score_board, mainboard)
 
-        if play_1:
+        # update snake's position
+        snake_whole.update()
 
-            # update snake's position
-            snake_whole.update()
+        # update scoreboard
+        score_board.update()
 
-            # update scoreboard
-            score_board.update()
+        # increase counter
+        counter += 1
 
-            # increase counter
-            counter += 1
+        # update counter of movements of settings
+        settings.counter_time_between_movements = counter
 
-            # update counter of movements of settings
-            settings.counter_time_between_movements = counter
+        # check events of game
+        fs.check_events(counter, settings, snake_whole)
 
-            # check events of game
-            fs.check_events(counter, settings, snake_whole)
+        # move snake
+        snake_whole.move()
 
-            # move snake
-            snake_whole.move()
+        # see if snake is biting itself
+        snake_bite_itself = snake_whole.is_biting_itself()
 
-            # see if snake is biting itself
-            snake_bite_itself = snake_whole.is_biting_itself()
-
-            if snake_whole.is_snake_dead(play_1=True):
-                # pause game
-                fs.pause(0.40)
-                # change flags to appear main menu
-                fs.change_flags(settings)
-                # reinstance snake to restore inital values
-                snake_whole = SnakeWhole(screen, settings, fs)
-                # check if a record was beat
-                mainboard.check_beat_record()
-                # if so, wait until user finish to write his/her name
-                fs.wait_write_name(screen, settings, mainboard,
+        if snake_whole.is_snake_dead(play_1=True):
+            # pause game
+            fs.pause(0.40)
+            # change flags to appear main menu
+            fs.change_flags(settings)
+            # reinstance snake to restore inital values
+            snake_whole = SnakeWhole(screen, settings, fs)
+            # check if a record was beat
+            mainboard.check_beat_record()
+            # if so, wait until user finish to write his/her name
+            fs.wait_write_name(screen, settings, mainboard,
                                                     score_board)
 
-            # check if one bitten have occurred
-            if raton.is_colliding():
-                # play bite sound
-                settings.snake_head.sound_bite.play()
+        # check if one bitten have occurred
+        if raton.is_colliding():
+            # play bite sound
+            settings.snake_head.sound_bite.play()
 
-                # increase lenght of snake
-                snake_whole.increase_lenght_of_snake()
+            # increase lenght of snake
+            snake_whole.increase_lenght_of_snake()
 
+            # change position of mouse
+            raton.change_position()
+
+            # increase score of scoreboard
+            raton.increase_point(settings)
+
+            # call the method again to know if it's still colliding
+            while raton.is_colliding():
                 # change position of mouse
                 raton.change_position()
 
-                # increase score of scoreboard
-                raton.increase_point(settings)
 
-                # call the method again to know if it's still colliding
-                while raton.is_colliding():
-                    # change position of mouse
-                    raton.change_position()
-
-
-            # update all objects in screen
-            fs.update_screen(screen, raton, snake_whole, raton, settings, score_board)
-
-        elif play_2:
-
-            # actualiza la posición de la serpiente
-            snake_whole.update()
-
-            # actualiza la tabla de puntuación
-            score_board.update()
-
-            # incrementa el contador y actualiza el atributo de la clase
-            counter += 1
-            settings.counter_time_between_movements = counter
-
-            # verifica si el usuario quiere cerrar el juego o mover la serpiente
-            fs.check_events(counter, settings)
-
-            # mueve la serpiente
-            fs.move_snake_whole(screen, raton, snake_whole, settings)
-
-            # verifica si la serpiente se muerde a sí misma
-            snake_bite_itself = snake_whole.is_biting_itself(fs)
-
-            if snake_bite_itself:
-                # pausa el juego
-                fs.pause(0.40)
-                # vacía el grupo
-                snake_whole.empty()
-                # vacía la lista
-                settings.snake_build_helper = []
-                # verifica si se batió un record
-                mainboard.check_beat_record()
-                fs.wait_write_name(screen, settings, mainboard, score_board)
-                # resetea el valor del puntaje
-                settings.board_point_initial = 0
-                # vuelve counstruir a la serpiente en su posición inicial
-                fs.build_snake_whole(screen, snake_whole, settings)
-
-            fs.snake_achieve_walls(screen, settings)
-
-            # verifica si hay colisiones y guarda valor retornado
-            collisions_raton = fs.check_collisions(raton, snake_whole, screen, settings)
-
-            # si hubo colisiones
-            if collisions_raton:
-                # reproduce el sonido de mordisco
-                settings.snake_head.sound_bite.play()
-
-                # crea nuevas coordenas aleatorias para la posición del ratón
-                position_x_raton = randint(0, 1007)
-                position_y_raton= randint(0, 530)
-
-                # se instacia el ratón
-                raton = Raton(screen, settings, position_x_raton, position_y_raton)
-
-                # aumenta el puntaje de la tabla de puntuación
-                raton.increase_point(settings)
-
-                # verifica si el ratón ocupa el espacio de la serpiente
-                position_available = fs.avoid_raton_body_of_snake(raton, settings)
-
-                while position_available:
-                    # crea nuevas coordenas aleatorias para la posición del ratón
-                    position_x_raton = randint(0, 1007)
-                    position_y_raton= randint(0, 530)
-
-                    # se instacia el ratón
-                    raton = Raton(screen, settings, position_x_raton, position_y_raton)
-                    # se vuelve a llamar a la función para evitar un bucle infinito
-                    position_available = fs.avoid_raton_body_of_snake(raton, settings)
-
-
-            # update all objects on screen
-            fs.update_screen(screen, raton, snake_whole, raton, settings, score_board, play_2=True)
+        # update all objects in screen
+        fs.update_screen(screen, raton, snake_whole, raton, settings, score_board)
 
 
 if __name__ == "__main__":
