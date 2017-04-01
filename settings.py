@@ -81,6 +81,9 @@ class Settings():
         self.snake_height = 15
         self.snake_margin = 3
 
+        # color
+        self.snake_color = (255, 255, 255)
+
         # posición inicial
         self.initial_position_x = 450 - (self.snake_width + self.snake_margin)
         self.initial_position_y = 230
