@@ -12,7 +12,6 @@ from random import randint
 import pygame
 # import game's settings
 from settings import Settings
-# se importa las funcions del juego con el alias de fs
 # import game's functions with the alias of fs
 import functions_snake as fs
 # se importa el módulo para tratar muchos sprite como grupos
@@ -87,7 +86,7 @@ def main():
             settings.counter_time_between_movements = counter
 
             # check events of game
-            fs.check_events(counter, settings)
+            fs.check_events(counter, settings, snake_whole)
 
             # move snake
             snake_whole.move()
@@ -95,7 +94,7 @@ def main():
             # see if snake is biting itself
             snake_bite_itself = snake_whole.is_biting_itself()
 
-            if fs.is_snake_dead(snake_whole, settings, play_1=True):
+            if snake_whole.is_snake_dead(play_1=True):
                 # pause game
                 fs.pause(0.40)
                 # change flags to appear main menu
@@ -114,7 +113,7 @@ def main():
                 settings.snake_head.sound_bite.play()
 
                 # increase lenght of snake
-                fs.increase_lenght_of_snake(screen, settings, snake_whole)
+                snake_whole.increase_lenght_of_snake()
 
                 # change position of mouse
                 raton.change_position()
