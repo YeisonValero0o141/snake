@@ -34,7 +34,6 @@ def draw_walls(screen, settings):
         pygame.draw.line(screen, color, position[0], position[1], size)
 
 
-####### function about snake #######
 def reset_values_settings(settings):
     """
     Reset values tracer of movements, positions, score and segments.
@@ -53,75 +52,84 @@ def reset_values_settings(settings):
     settings.traceback_movements = ["K_RIGHT"]
 
 
-def is_snake_dead(snake_whole, settings, play_1=False):
-    """If snake is dead change flag variable, if not, keep the
-    same vaue."""
-    # first check is snake bite itself
-    if snake_whole.is_biting_itself():
-        return True
-    # snake just collide with walls in the first mode game
-    elif snake_whole.does_collide_with_walls() and play_1 == True:
-        return True
-    else:
-        return False
+def clean_tracers(traceback_movements, counter_move_now):
+    """Remove the first elements of the list of tracer movements
+    and counter."""
+    del traceback_movements[0]
+    del counter_move_now[0]
+
+
+def add_rastreo_tracer(traceback_movements, counter_move_now, movement, counter):
+    """Add the trace to the tracer movements and counter."""
+    traceback_movements.append(movement)
+    counter_move_now.append(counter)
 
 
 # Funciones para mover la serpiente con los eventos de las flechas serpiente
-# y verifica si la serpiente choca con los muros
-def move_keydown(event, counter, settings):
-    """Mueve la serpiente e impide que haga movimientos bruscos"""
+def move_keydown(event, counter, settings, snake_whole):
+    """
+    Move snake and does not allow sudden movements like opposite
+    movements.
+
+    For example if snake is going to lefward avoid snake go to
+    rightward. Also avoid movements in the same second.
+    """
     # guarda el valor del atributo de la clase como una variable de la función
+    # take tracer of movements and counter
     traceback_movements = settings.traceback_movements
     counter_move_now = settings.traceback_counter
 
+    # wheter it's not same second and movement is not the opposite. This apply for all conditionals
     if event.key == pygame.K_UP:
-        # si el moviento anterior no es contrario al del actual y no es en el mismo segundo
         if not traceback_movements[-1] == "K_DOWN" and not counter == counter_move_now[-1]:
-            settings.change_position_x = 0
-            settings.change_position_y = (settings.snake_height +settings.snake_margin) * -1
-            traceback_movements.append("K_UP")
-            counter_move_now.append(counter)
-            # remueve el primer elemento de la lista
-            del traceback_movements[0]
-            del counter_move_now[0]
+            # move up
+            snake_whole.move_up()
+
+            # add trace of movements and counter to the tracer
+            add_rastreo_tracer(traceback_movements, counter_move_now,
+            "K_UP", counter)
+
+            # remove the first item of list of both tracer
+            clean_tracers(traceback_movements, counter_move_now)
 
     elif event.key == pygame.K_DOWN:
-        # si el moviento anterior no es contrario al del actual y no es en el mismo segundo
         if not traceback_movements[-1] == "K_UP" and not counter == counter_move_now[-1]:
-            settings.change_position_x = 0
-            settings.change_position_y = (settings.snake_height +settings.snake_margin)
-            traceback_movements.append("K_DOWN")
-            counter_move_now.append(counter)
-            # remueve el primer elemento de la lista
-            del traceback_movements[0]
-            del counter_move_now[0]
+            # move downward
+            snake_whole.move_down()
+
+            # add trace of movements and counter to the tracer
+            add_rastreo_tracer(traceback_movements, counter_move_now,
+            "K_DOWN", counter)
+
+            # remove the first item of list of both tracer
+            clean_tracers(traceback_movements, counter_move_now)
 
     elif event.key == pygame.K_LEFT:
-        # si el moviento anterior no es contrario al del actual y no es en el mismo segundo
         if not traceback_movements[-1] == "K_RIGHT" and not counter == counter_move_now[-1]:
-            settings.change_position_x = (settings.snake_width + settings.snake_margin) * -1
-            settings.change_position_y = 0
-            traceback_movements.append("K_LEFT")
-            counter_move_now.append(counter)
-            # remueve el primer elemento de la lista
-            del traceback_movements[0]
-            del counter_move_now[0]
+            # move left
+            snake_whole.move_left()
+
+            # add trace of movements and counter to the tracer
+            add_rastreo_tracer(traceback_movements, counter_move_now,
+            "K_LEFT", counter)
+
+            # remove the first item of list of both tracer
+            clean_tracers(traceback_movements, counter_move_now)
 
 
     elif event.key == pygame.K_RIGHT:
-        # si el moviento anterior no es contrario al del actual y no es en el mismo segundo
         if not traceback_movements[-1] == "K_LEFT" and not counter == counter_move_now[-1]:
-            settings.change_position_x = (settings.snake_width +settings.snake_margin)
-            settings.change_position_y = 0
-            traceback_movements.append("K_RIGHT")
-            counter_move_now.append(counter)
-            # remueve el primer elemento de la lista
-            del traceback_movements[0]
-            del counter_move_now[0]
+            # move right
+            snake_whole.move_right()
 
-    # actualiza la lista de la clase
-    traceback_movements = settings.traceback_movements
-    settings.traceback_counter = counter_move_now
+            # add trace of movements and counter to the tracer
+            add_rastreo_tracer(traceback_movements, counter_move_now,
+            "K_RIGHT", counter)
+
+            # remove the first item of list of both tracer
+            clean_tracers(traceback_movements, counter_move_now)
+
+
 
 
 def snake_achieve_walls(screen, settings):
@@ -148,36 +156,6 @@ def snake_achieve_walls(screen, settings):
 
     # actualiza la variable de la clase
     settings.snake_head = snake
-
-
-def increase_lenght_of_snake(screen, settings, snake_whole):
-    """
-    Increase snake by one segment.
-
-    The segment, it will be appended at last segment.
-    """
-    # take all segments
-    segments = settings.snake_build_helper
-    # take the last segments to use its position to append the new segment
-    last_segment = settings.snake_tail
-
-    # utilize last_segment's position to set position of the new segment
-    position_x = last_segment.rect.x
-    position_y = last_segment.rect.y
-
-    # create new sement at the end of the snake (the tail)
-    last_snake_segment = Snake(screen, settings, position_x, position_y)
-
-    # append segment in the list of segments
-    segments.append(last_snake_segment)
-
-    # add new the segment in the snake
-    snake_whole.add(last_snake_segment)
-
-    # update list of segments
-    settings.snake_build_helper = segments
-    # and the last segment (the tail)
-    settings.snake_tail = last_snake_segment
 
 
 # FUNCIONES PARA EL MENÚ PRINCIPAL
@@ -336,7 +314,7 @@ def limit_words(settings, number=10):
         name.pop()
 
 
-def check_events(counter, settings):
+def check_events(counter, settings, snake_whole):
     """Verifica si el usuario desea salir del juego o quiere mover a la serpiente."""
     # Toma todos los eventos del juego
     for event in pygame.event.get():
@@ -345,7 +323,7 @@ def check_events(counter, settings):
             exit()
         # si el usuario aprienta cualquier botón
         elif event.type == pygame.KEYDOWN:
-            move_keydown(event, counter, settings)
+            move_keydown(event, counter, settings, snake_whole)
 
 
 def exit():
