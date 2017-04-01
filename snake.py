@@ -29,8 +29,19 @@ class Snake(Sprite):
         # take rectangle of screen
         self.screen_rect = self.screen.get_rect()
 
+        # store height and width
+        self.height = settings.snake_height
+        self.width =  settings.snake_width
+
+        # color
+        self.color = settings.snake_color
+
         # load image of snake
-        self.image = pygame.image.load("images/snake.png")
+        # create a square to represent the snake
+        self.image = pygame.Surface((self.height, self.width))
+
+        # fill with white
+        self.image.fill(self.color)
 
         # take rectangles of image
         self.rect = self.image.get_rect()
@@ -54,6 +65,10 @@ class SnakeWhole(Group):
         self.settings = settings
         # save modules of functions
         self.fs = fs
+
+        # store height and margin
+        self.height = settings.snake_height
+        self.margin = settings.snake_margin
 
         # restore value of movements and tracer of movements. This is
         # useful when user start to play again in a different or same mode of game
@@ -166,3 +181,67 @@ class SnakeWhole(Group):
         # otherwise, return False
         else:
             return False
+
+
+    def is_snake_dead(self, play_1=False):
+        """If snake is dead change flag variable, if not, keep the
+        same vaue."""
+        # first check is snake bite itself
+        if self.is_biting_itself():
+            return True
+        # snake just collide with walls in the first mode game
+        elif self.does_collide_with_walls() and play_1 == True:
+            return True
+        # otherwise, False
+        else:
+            return False
+
+
+    def increase_lenght_of_snake(self):
+        """
+        Increase snake by one segment.
+
+        The segment, it will be appended at last segment.
+        """
+        # take all segments
+        segments = self.settings.snake_build_helper
+        # take the last segments to use its position to
+        # append the new segment
+        last_segment = self.settings.snake_tail
+
+        # utilize last_segment's position to set position of the new segment
+        x = last_segment.rect.x
+        y = last_segment.rect.y
+
+        # create new sement at the end of the snake (the tail)
+        last_segment = Snake(self.screen, self.settings, x, y)
+
+        # append segment in the list of segments
+        segments.append(last_segment)
+
+        # add the new segment to the snake
+        self.add(last_segment)
+
+
+    def move_up(self):
+        """Change variables of directions to go upward."""
+        self.settings.change_position_x = 0
+        self.settings.change_position_y =  (self.height + self.margin) * -1
+
+
+    def move_down(self):
+        """Change variables of directions to go downward."""
+        self.settings.change_position_x = 0
+        self.settings.change_position_y = self.height + self.margin
+
+
+    def move_left(self):
+        """Change variables of directions to go leftward."""
+        self.settings.change_position_x = (self.height + self.margin) * -1
+        self.settings.change_position_y = 0
+
+
+    def move_right(self):
+        """Change variables of directions to go rightward."""
+        self.settings.change_position_x = self.height + self.margin
+        self.settings.change_position_y = 0
