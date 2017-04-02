@@ -129,138 +129,99 @@ def move_keydown(event, counter, settings, snake_whole):
             # remove the first item of list of both tracer
             clean_tracers(traceback_movements, counter_move_now)
 
+# function for main menu
+def move_cursor(event, mainboard, settings):
+    """
+    Check wheter user moves cursor or pick a choice.
+    """
+    if event.key == pygame.K_UP or event.key == pygame.K_LEFT:
+        # llama al método que cambia de color al textos
+        mainboard.change_color_text1()
+        # se añade al final de la lista
+        settings.traceback_cursor.append("Play 1")
 
-def snake_achieve_walls(screen, settings):
-    """Si la serpiente llega a la parte superior de la pantalla aparecerá en la parte inferior.
-    Lo mismo va para todos los lados de la pantalla."""
-    # guarda el paramétro como atributo
-    screen = screen
-    # obtiene el rectángulo de la pantalla
-    screen_rect = screen.get_rect()
-    # almacena la variable de la clase como una variable de la función
-    snake = settings.snake_head
-    # si la serpiente sobrepasa la parte superior de la pantalla
-    if snake.rect.top < screen_rect.top:
-        snake.rect.y = 525
-    # si la serpiente sobrepasa la parte inferior de la pantalla
-    elif snake.rect.bottom > screen_rect.bottom:
-        snake.rect.y = 5
-    # si la serpiente sobrepasa la parte izquierda de la pantalla
-    elif settings.snake_head.rect.left < 0:
-        snake.rect.x = 1000
-    # si la serpiente sobrepasa la parte derecha de la pantalla
-    elif settings.snake_head.rect.right > 1023:
-        snake.rect.x = 5 + 1
+    elif event.key == pygame.K_RIGHT:
+        # llama al método que cambia de color al textos
+        mainboard.change_color_text2()
+        # se añade al final de la lista
+        settings.traceback_cursor.append("Play 2")
 
-    # actualiza la variable de la clase
-    settings.snake_head = snake
+    elif event.key == pygame.K_DOWN:
+        # llama al método que cambia de color al textos
+        mainboard.change_color_text3()
+        # se añade al final de la lista
+        settings.traceback_cursor.append(False)
 
-
-# FUNCIONES PARA EL MENÚ PRINCIPAL
-def move_cursor(mainboard, settings):
-    """Verifica si el usuario mueve el cursos o elige una opción"""
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    elif event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+        if settings.traceback_cursor[-1] == "Play 1":
+            settings.play_1 = True
+            settings.play_2 = False
+            settings.main_menu = False
+        elif settings.traceback_cursor[-1] == "Play 2":
+            settings.play_1 = False
+            settings.play_2 = True
+            settings.main_menu = False
+        elif settings.traceback_cursor[-1] == False:
             exit()
-        elif event.type == pygame.KEYDOWN:
-
-            if event.key == pygame.K_UP or event.key == pygame.K_LEFT:
-                # llama al método que cambia de color al textos
-                mainboard.change_color_text1()
-                # se añade al final de la lista
-                settings.traceback_cursor.append("Play 1")
-
-            elif event.key == pygame.K_RIGHT:
-                # llama al método que cambia de color al textos
-                mainboard.change_color_text2()
-                # se añade al final de la lista
-                settings.traceback_cursor.append("Play 2")
-
-            elif event.key == pygame.K_DOWN:
-                # llama al método que cambia de color al textos
-                mainboard.change_color_text3()
-                # se añade al final de la lista
-                settings.traceback_cursor.append(False)
-
-            elif event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                if settings.traceback_cursor[-1] == "Play 1":
-                    settings.play_1 = True
-                    settings.play_2 = False
-                    settings.main_menu = False
-                elif settings.traceback_cursor[-1] == "Play 2":
-                    settings.play_1 = False
-                    settings.play_2 = True
-                    settings.main_menu = False
-                elif settings.traceback_cursor[-1] == False:
-                    exit()
-
-            elif event.key == pygame.K_q:
-                exit()
 
 #####################################
 ####     IMPORTANT FUNCTIONS     ####
 #####################################
-def update_screen(screen, raton, snake_whole, ratones, settings, score_board, play_2=False):
+def update_screen(screen, raton, snake_whole, ratones, settings, score_board, mainboard):
     """Update screen."""
     # fill screen with the background color
     screen.fill(settings.background_color)
 
-    # if it's play 2 mode
-    if not play_2:
-        # draw the walls on borders
-        draw_walls(screen, settings)
+    # wheter main menu is running
+    if settings.main_menu:
+        # the main menu, it's the only one is drawn
+        update_menu(settings, mainboard)
+    else:
+        # just draw them if it's on game mode 1
+        if settings.play_1:
+            # draw the walls on borders
+            draw_walls(screen, settings)
 
-    # blit scoreboard
-    score_board.blitme()
+        # blit scoreboard
+        score_board.blitme()
 
-    # blit mouse
-    raton.blitme()
+        # blit mouse
+        raton.blitme()
 
-    # draw snake
-    snake_whole.draw(screen)
+        # draw snake
+        snake_whole.draw(screen)
 
     # flip screen
     pygame.display.flip()
 
 
-def main_menu(screen, settings, score_board, mainboard):
-    """Una sub-rutina que ejecuta el menú principal."""
-    while settings.main_menu:
-        move_cursor(mainboard, settings)
-        update_menu(screen, settings, score_board, mainboard)
-        # vacía la lista que contiene cada carácter del nombre del jugdar con la máxima puntuación
-        # para que no vuelva a aperecer de nuevo cuando sea bátido el rećord
-        settings.name_of_beater = []
+def main_menu(event, settings, mainboard):
+    """
+    If user pressed one of the key arrows, move cursor or enter
+    in one game move.
+    """
+    move_cursor(event, mainboard, settings)
+    # clean the whole list which cotains name of play with highest
+    # score to avoid appear agains when the record will be beatten
+    settings.name_of_beater = []
 
 
-def update_menu(screen, settings, score_board, mainboard):
-    """Actualiza el menú principal."""
-    # pinta el color en la pantalla
-    screen.fill(settings.background_color)
-
-    # dibuja los tres textos del menú principal en la pantalla
+def update_menu(settings, mainboard):
+    """Update main menux."""
+    # draw the three texts of main menu
     mainboard.blit_text1()
     mainboard.blit_text2()
     mainboard.blit_text3()
 
-    # actualiza la máxima puntuación
+    # update highest score
     mainboard.update_record()
 
-    # dibuja el texto y las más alta puntuación
+    # draw text and highest score
     mainboard.blit_text_score()
     mainboard.blit_score()
 
     # dibuja el nombre del jugador con la puntuación más alta
     mainboard.blit_name()
-
-    # dra walls on border of screen
-    draw_walls(screen, settings)
-
-    # dibuja la tabla de puntuación
-    score_board.blitme()
-
-    # dibuja los cambios en la pantalla
-    pygame.display.flip()
 
 
 def draw_record_name(mainboard):
@@ -284,6 +245,7 @@ def change_flags(settings):
 
 
 def wait_write_name(screen, settings, mainboard, score_board):
+    """Wait until user finish to write its name."""
     while  settings.write_finish:
         # Toma todos los eventos del juego
         for event in pygame.event.get():
@@ -317,7 +279,7 @@ def limit_words(settings):
         name.pop()
 
 
-def check_events(counter, settings, snake_whole):
+def check_events(screen, counter, mainboard, settings, snake_whole):
     """
     Check events of game.
     Like move snake or close game.
@@ -328,8 +290,12 @@ def check_events(counter, settings, snake_whole):
         if event.type == pygame.QUIT:
             exit()
         # wheter user press any buttons
-        elif event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN and not settings.main_menu:
             move_keydown(event, counter, settings, snake_whole)
+
+        if event.type == pygame.KEYDOWN and settings.main_menu:
+            # move cursor and see if user pick a choice
+            main_menu(event, settings, mainboard)
 
 
 def exit():

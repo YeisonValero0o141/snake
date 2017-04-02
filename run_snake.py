@@ -14,7 +14,7 @@ import pygame
 from settings import Settings
 # import game's functions with the alias of fs
 import functions_snake as fs
-# se importa el módulo para tratar muchos sprite como grupos
+# import Snake
 from snake import SnakeWhole
 # import mouse
 from raton import Raton
@@ -32,7 +32,6 @@ def main():
     # instance Settins class
     settings = Settings()
 
-    # se establece el tamaño de la ventana
     # set size's screen and open it
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
     # set title's screen
@@ -59,17 +58,10 @@ def main():
     # hide cursor
     pygame.mouse.set_visible(False)
 
+    # main loop
     while True:
-        # variables tipo bandera para saber si el usuario quiere juegar
-        main_menu = settings.main_menu
-        play_1 = settings.play_1
-        play_2 = settings.play_2
-
         # set fps
         clock.tick(10)
-
-        if main_menu:
-            fs.main_menu(screen, settings, score_board, mainboard)
 
         # update snake's position
         snake_whole.update()
@@ -84,7 +76,7 @@ def main():
         settings.counter_time_between_movements = counter
 
         # check events of game
-        fs.check_events(counter, settings, snake_whole)
+        fs.check_events(screen, counter, mainboard, settings, snake_whole)
 
         # move snake
         snake_whole.move()
@@ -92,7 +84,12 @@ def main():
         # see if snake is biting itself
         snake_bite_itself = snake_whole.is_biting_itself()
 
-        if snake_whole.is_snake_dead(play_1=True):
+        # just on game mode 2
+        if settings.play_2:
+            # change positions wheter snake achieve any borders
+            snake_whole.snake_achieve_walls()
+
+        if snake_whole.is_snake_dead():
             # pause game
             fs.pause(0.40)
             # change flags to appear main menu
@@ -126,7 +123,7 @@ def main():
 
 
         # update all objects in screen
-        fs.update_screen(screen, raton, snake_whole, raton, settings, score_board)
+        fs.update_screen(screen, raton, snake_whole, raton, settings, score_board, mainboard)
 
 
 if __name__ == "__main__":

@@ -70,6 +70,9 @@ class SnakeWhole(Group):
         self.height = settings.snake_height
         self.margin = settings.snake_margin
 
+        # get rectangle of screen
+        self.screen_rect = self.screen.get_rect()
+
         # restore value of movements and tracer of movements. This is
         # useful when user start to play again in a different or same mode of game
         self.fs.reset_values_settings(settings)
@@ -190,7 +193,7 @@ class SnakeWhole(Group):
         if self.is_biting_itself():
             return True
         # snake just collide with walls in the first mode game
-        elif self.does_collide_with_walls() and play_1 == True:
+        elif self.does_collide_with_walls() and self.settings.play_1:
             return True
         # otherwise, False
         else:
@@ -221,6 +224,33 @@ class SnakeWhole(Group):
 
         # add the new segment to the snake
         self.add(last_segment)
+
+
+    def snake_achieve_walls(self):
+        """
+        Change position if snake achieve any borders of screen.
+        """
+        # take snake's head
+        snake = self.settings.snake_head
+        # wheter snake achive top of border
+        if snake.rect.top < self.screen_rect.top:
+            # change its position
+            snake.rect.y = 525
+        # wheter snake achive bottom of border
+        elif snake.rect.bottom > self.screen_rect.bottom:
+            # change its postion
+            snake.rect.y = 5
+        # if snake achive right side border of screen
+        elif snake.rect.left < 0:
+            # change its position
+            snake.rect.x = 1000
+        # if snake achive left side border of screen
+        elif snake.rect.right > 1023:
+            # change its position
+            snake.rect.x = 5 + 1
+
+        # update settings's variable
+        self.settings.snake_head = snake
 
 
     def move_up(self):
