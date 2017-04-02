@@ -189,11 +189,9 @@ class MainBoard():
         # almacena la puntuación actual
         score = self.settings.board_point_initial
         if score > record:
-            # si la puntuación es mayor escribe el nuevo récord en el archivo
+            # write new highest score in filename_1
             self.write_file(self.filename_1)
-            # cambia el valor
-            self.settings.write_finish = False
-            # llama a la función para escriba el nombre
+            # change flag to write new name
             self.settings.write_finish = True
         elif score <= record:
             # si es menor no hace nada

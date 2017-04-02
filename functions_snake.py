@@ -175,7 +175,7 @@ def update_screen(screen, raton, snake_whole, ratones, settings, score_board, ma
     # wheter main menu is running
     if settings.main_menu:
         # the main menu, it's the only one is drawn
-        update_menu(settings, mainboard)
+        draw_menu(settings, mainboard)
     else:
         # just draw them if it's on game mode 1
         if settings.play_1:
@@ -206,8 +206,8 @@ def main_menu(event, settings, mainboard):
     settings.name_of_beater = []
 
 
-def update_menu(settings, mainboard):
-    """Update main menux."""
+def draw_menu(settings, mainboard):
+    """Draw main menu."""
     # draw the three texts of main menu
     mainboard.blit_text1()
     mainboard.blit_text2()
@@ -225,14 +225,14 @@ def update_menu(settings, mainboard):
 
 
 def draw_record_name(mainboard):
-    """Dibuja el récord y nombrel del jugador con la más alta puntuación.
-    Actualiza el nombre del jugador con la más alta puntuación."""
-    # escribe el nombre en el archivo
+    """Draw name of beater and its score."""
+    # write name in filename_2
     mainboard.write_file(mainboard.filename_2, True)
-    # y lo dibuja en la pantalla
+    # update its name and score
     mainboard.update_name()
+    mainboard.update_record()
 
-    # dibuja el texto y las más alta puntuación
+    # draw name and score
     mainboard.blit_text_score()
     mainboard.blit_score()
 
@@ -256,13 +256,16 @@ def wait_write_name(screen, settings, mainboard, score_board):
             elif event.type == pygame.KEYDOWN:
                 write_your_name(event, settings)
 
-        # elimina los carácteres si se ha pasado el limite permitido
+        # limit the number of letter
         limit_words(settings)
 
-        # dibuja el menú en la pantalla
-        update_menu(screen, settings, score_board, mainboard)
-        # dibuja y actualiza el nombre del jugador con la máxima puntuación
+        # fill screen with the background color
+        screen.fill(settings.background_color)
+
+        # draw and update name of beater
         draw_record_name(mainboard)
+        # flip screen
+        pygame.display.flip()
 
 
 def limit_words(settings):
@@ -282,7 +285,7 @@ def limit_words(settings):
 def check_events(screen, counter, mainboard, settings, snake_whole):
     """
     Check events of game.
-    Like move snake or close game.
+    Such as: move snake, close game and write name.
     """
     # take all events of game
     for event in pygame.event.get():
@@ -372,13 +375,10 @@ def write_your_name(event, settings):
     elif event.key == pygame.K_RETURN:
         settings.write_finish = False
     elif event.key == pygame.K_BACKSPACE:
-        # maneja las excepciones
+        # if there is no item in the list of name
         try:
-            # si no hay nigún item en la lista
+            # delete last letter
             name.pop()
         except IndexError:
             # para evitar un error no hace nada
             pass
-
-    # actualiza la lista
-    settings.name_of_beater = name

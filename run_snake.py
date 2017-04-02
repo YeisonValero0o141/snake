@@ -81,9 +81,6 @@ def main():
         # move snake
         snake_whole.move()
 
-        # see if snake is biting itself
-        snake_bite_itself = snake_whole.is_biting_itself()
-
         # just on game mode 2
         if settings.play_2:
             # change positions wheter snake achieve any borders
@@ -94,13 +91,14 @@ def main():
             fs.pause(0.40)
             # change flags to appear main menu
             fs.change_flags(settings)
-            # reinstance snake to restore inital values
-            snake_whole = SnakeWhole(screen, settings, fs)
             # check if a record was beat
             mainboard.check_beat_record()
+            # reinstance snake to restore inital values
+            snake_whole = SnakeWhole(screen, settings, fs)
             # if so, wait until user finish to write his/her name
             fs.wait_write_name(screen, settings, mainboard,
                                                     score_board)
+
 
         # check if one bitten have occurred
         if raton.is_colliding():
