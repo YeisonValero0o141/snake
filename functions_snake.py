@@ -19,7 +19,66 @@ from snake import Snake
 # Raton (mouse) class
 from raton import Raton
 
-####### function to draw the walls #######
+#####################################
+#####    IMPORTANT FUNCTIONS    #####
+#####################################
+def update_screen(screen, raton, snake_whole, ratones, settings, score_board, mainboard):
+    """Update screen."""
+    # fill screen with the background color
+    screen.fill(settings.background_color)
+
+    # wheter main menu is running
+    if settings.main_menu:
+        # the main menu, it's the only one is drawn
+        draw_menu(settings, mainboard)
+    else:
+        # just draw them if it's on game mode 1
+        if settings.play_1:
+            # draw the walls on borders
+            draw_walls(screen, settings)
+
+        # blit scoreboard
+        score_board.blitme()
+
+        # blit mouse
+        raton.blitme()
+
+        # draw snake
+        snake_whole.draw(screen)
+
+    # flip screen
+    pygame.display.flip()
+
+
+def check_events(screen, counter, mainboard, settings, snake_whole):
+    """
+    Check events of game.
+    Such as: move snake, close game and write name.
+    """
+    # take all events of game
+    for event in pygame.event.get():
+        # if user press x in the tile bar
+        if event.type == pygame.QUIT:
+            exit()
+        # wheter user press any buttons
+        elif event.type == pygame.KEYDOWN and not settings.main_menu:
+            change_snake_direction(event, counter, settings, snake_whole)
+
+        if event.type == pygame.KEYDOWN and settings.main_menu:
+            # move cursor and see if user pick a choice
+            main_menu(event, settings, mainboard)
+
+
+def exit():
+    """Close game."""
+    sys.exit()
+
+
+def pause(seconds):
+    """Pause game by n seconds."""
+    sleep(seconds)
+
+####### FUCNTION TO DRAW WALLS #######
 def draw_walls(screen, settings):
     """Draw walls on border of screen."""
     # list with all positions of walls
@@ -33,7 +92,7 @@ def draw_walls(screen, settings):
         # draw wall
         pygame.draw.line(screen, color, position[0], position[1], size)
 
-
+####### FUCNTIONS FOR SNAKE #######
 def reset_values_settings(settings):
     """
     Reset values tracer of movements, positions, score and segments.
@@ -128,70 +187,51 @@ def change_snake_direction(event, counter, settings, snake_whole):
             # remove the first item of list of both tracer
             clean_tracers(traceback_movements, counter_move_now)
 
-# function for main menu
+####### FUNCTIONS FOR MAIN MENU #######
 def move_cursor(event, mainboard, settings):
     """
     Check wheter user moves cursor or pick a choice.
     """
     if event.key == pygame.K_UP or event.key == pygame.K_LEFT:
-        # llama al método que cambia de color al textos
+        # change color of text 1
         mainboard.change_color_text1()
-        # se añade al final de la lista
+        # and add it to the tracer of cursor
         settings.traceback_cursor.append("Play 1")
 
     elif event.key == pygame.K_RIGHT:
-        # llama al método que cambia de color al textos
+        # change color of text 2
         mainboard.change_color_text2()
-        # se añade al final de la lista
+        # add it to the tracer of cursor
         settings.traceback_cursor.append("Play 2")
 
     elif event.key == pygame.K_DOWN:
-        # llama al método que cambia de color al textos
+        # change color of text 3
         mainboard.change_color_text3()
-        # se añade al final de la lista
+        # add it to tracer of cursor
         settings.traceback_cursor.append(False)
 
     elif event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+        # see what game mode user choice
         if settings.traceback_cursor[-1] == "Play 1":
-            settings.play_1 = True
-            settings.play_2 = False
-            settings.main_menu = False
+            # change flag to play 1 game mode
+            flag_play(settings, settings.traceback_cursor[-1])
         elif settings.traceback_cursor[-1] == "Play 2":
-            settings.play_1 = False
-            settings.play_2 = True
-            settings.main_menu = False
+            # change flag to play 2 game mode
+            flag_play(settings, settings.traceback_cursor[-1])
         elif settings.traceback_cursor[-1] == False:
             exit()
 
-#####################################
-####     IMPORTANT FUNCTIONS     ####
-#####################################
-def update_screen(screen, raton, snake_whole, ratones, settings, score_board, mainboard):
-    """Update screen."""
-    # fill screen with the background color
-    screen.fill(settings.background_color)
 
-    # wheter main menu is running
-    if settings.main_menu:
-        # the main menu, it's the only one is drawn
-        draw_menu(settings, mainboard)
-    else:
-        # just draw them if it's on game mode 1
-        if settings.play_1:
-            # draw the walls on borders
-            draw_walls(screen, settings)
+def flag_play(settings, play="Play 1"):
+    """Change flags to run one the game modes."""
+    if play == "Play 1":
+        settings.play_1 = True
+        settings.play_2 = False
+    elif play == "Play 2":
+        settings.play_1 = False
+        settings.play_2 = True
 
-        # blit scoreboard
-        score_board.blitme()
-
-        # blit mouse
-        raton.blitme()
-
-        # draw snake
-        snake_whole.draw(screen)
-
-    # flip screen
-    pygame.display.flip()
+    settings.main_menu = False
 
 
 def main_menu(event, settings, mainboard):
@@ -200,8 +240,8 @@ def main_menu(event, settings, mainboard):
     in one game move.
     """
     move_cursor(event, mainboard, settings)
-    # clean the whole list which cotains name of play with highest
-    # score to avoid appear agains when the record will be beatten
+    # clean the whole list which cotains name of play with highest score
+    # to avoid appear agains when the record will be beatten
     settings.name_of_beater = []
 
 
@@ -212,17 +252,15 @@ def draw_menu(settings, mainboard):
     mainboard.blit_text2()
     mainboard.blit_text3()
 
-    # update highest score
-    mainboard.update_record()
-
     # draw text and highest score
     mainboard.blit_text_score()
     mainboard.blit_score()
 
-    # dibuja el nombre del jugador con la puntuación más alta
+    # draw name of player with highest score
     mainboard.blit_name()
 
 
+####### FUNCTIONS FOR RECORD NAME #######
 def draw_record_name(mainboard):
     """Draw name of beater and its score."""
     # write name in filename_2
@@ -234,13 +272,6 @@ def draw_record_name(mainboard):
     # draw name and score
     mainboard.blit_text_score()
     mainboard.blit_score()
-
-
-def change_flags(settings):
-    """Change flags to stop game and appear main menu."""
-    settings.main_menu = True
-    settings.play_1 = False
-    settings.play_2 = False
 
 
 def wait_write_name(screen, settings, mainboard, score_board):
@@ -281,39 +312,12 @@ def limit_words(settings):
         name.pop()
 
 
-def check_events(screen, counter, mainboard, settings, snake_whole):
-    """
-    Check events of game.
-    Such as: move snake, close game and write name.
-    """
-    # take all events of game
-    for event in pygame.event.get():
-        # if user press x in the tile bar
-        if event.type == pygame.QUIT:
-            exit()
-        # wheter user press any buttons
-        elif event.type == pygame.KEYDOWN and not settings.main_menu:
-            change_snake_direction(event, counter, settings, snake_whole)
-
-        if event.type == pygame.KEYDOWN and settings.main_menu:
-            # move cursor and see if user pick a choice
-            main_menu(event, settings, mainboard)
-
-
-def exit():
-    """Close game."""
-    sys.exit()
-
-
-def pause(seconds):
-    """Pause game by n seconds."""
-    sleep(seconds)
-
-
 def write_your_name(event, settings):
-    """Rastrea los botones presionados para typear un nombre.
-    Los pasa uno a uno a una lista de la clase settings."""
-    # almacena la lista de la clase
+    """
+    Trace the buttons that was pressed by user.
+    Add them to the list of the name to store its name too.
+    """
+    # take list of name beater
     name = settings.name_of_beater
     if event.key == pygame.K_a:
         name.append("A")
@@ -379,5 +383,5 @@ def write_your_name(event, settings):
             # delete last letter
             name.pop()
         except IndexError:
-            # para evitar un error no hace nada
+            # do nothing
             pass

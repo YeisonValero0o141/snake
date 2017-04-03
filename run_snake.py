@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Snake Game
+Snake Game.
 """
 
 # import modules

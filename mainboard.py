@@ -1,29 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# name of the file of mainboard.py
+"""Mainboard of game."""
 
-# importa el módulo
-# importa la fuente de pygame
+# import pygame's font
 import pygame.font
 
 class MainBoard():
-    """La clase representa a una menú principal."""
+    """Represent main menu."""
 
     def __init__(self, screen, settings):
-        """Incializa todos los atributos de la clase y fija su posición inical."""
-        # se almacenan los parámetros como atributos
+        """
+        Store all attribute of class and set its initial positions.
+        """
+        # save parameter like attributes
         self.screen = screen
         self.settings = settings
 
-        # guarda el nombre de los archivos
+        # store file names
         self.filename_1 = "highest_score.txt"
         self.filename_2 = "name_beater.txt"
 
-        # toma el rectángulo de la pantalla
+        # take screen's rectangle
         self.screen_rect = self.screen.get_rect()
 
-        # guarda el texto y color
+        # save text and its color
         self.text_1 = self.settings.text_mainboard_1
         self.text_2 = self.settings.text_mainboard_2
         self.text_3 = self.settings.text_mainboard_3
@@ -31,17 +32,16 @@ class MainBoard():
         self.color_2 = self.settings.text_mainboard_color_2
         self.color_2 = self.settings.text_mainboard_color_2
 
-        # el texto de la máxima puntuación
+        # text for highest score
         self.text_highest_score = settings.text_highest_score
 
-        # máxima puntuación
+        # highest score
         self.highest_score = self.load_file(self.filename_1)
 
-        # nombre del jugador del nuevo récord
+        # name of player wht new record
         self.name_beater = self.load_file(self.filename_2, True)
 
-        # fija que se usará la tipografía de pygame por defecto
-        # take font
+        # set font by default
         self.font = pygame.font.SysFont(None, 60)
 
         # renderiza el texto 1
@@ -216,30 +216,30 @@ class MainBoard():
 
 
     def blit_text1(self):
-        """Dibuja el text 1 del menú principal."""
+        """Draw text 1 of the main menu."""
         self.screen.blit(self.message_1, self.rect_1)
 
 
     def blit_text2(self):
-        """Dibuja el text 2 del menú principal."""
+        """Draw text 2 of the main menu."""
         self.screen.blit(self.message_2, self.rect_2)
 
 
     def blit_text3(self):
-        """Dibuja el texto 2 del menú princial."""
+        """Draw text 3 of the main menu."""
         self.screen.blit(self.message_3, self.rect_3)
 
 
     def blit_text_score(self):
-        """Dibuja la puntuación encima del menú principal."""
+        """Draw text of manu."""
         self.screen.blit(self.message_text_score, self.message_score_rect)
 
 
     def blit_score(self):
-        """Dibuja la puntuación más alta puntuación."""
+        """Draw highest score."""
         self.screen.blit(self.message_score, self.score_rect)
 
 
     def blit_name(self):
-        """Dibuja el nombre del jugador con la puntuación más alta."""
+        """Blit name of player on screen"""
         self.screen.blit(self.message_name, self.name_rect)

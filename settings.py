@@ -17,8 +17,7 @@ class Settings():
     """
 
     def __init__(self):
-        """Inicializa todos los atributos de la clase.
-        Store all data"""
+        """Store all data"""
         ######## Screen ########
         # size
         self.screen_width = 1025
@@ -51,7 +50,6 @@ class Settings():
         ######## Wall ########
         self.wall_size = 10
         self.wall_color = (33, 33, 33)
-        # fija la pisición del muro en los bordes de la pantalla. Donde 1 es posición inicial y 2 es posición final
         # set position of walls. 1 it's start position and 2 it's the last one
         self.wall_position_up_1 = (0, 3)
         self.wall_position_up_2 = (1023, 3)
@@ -62,7 +60,7 @@ class Settings():
         self.wall_position_right_1 = (1023, 2)
         self.wall_position_right_2 = (1023, 542)
 
-        # will contains all position of walss
+        # will contains all position of walls
         self.wall_positions = [
             [self.wall_position_up_1, self.wall_position_up_2],
             [self.wall_position_down_1, self.wall_position_down_2],
@@ -88,58 +86,52 @@ class Settings():
         self.initial_position_x = 450 - (self.snake_width + self.snake_margin)
         self.initial_position_y = 230
 
-        # variable bandera para la construcción de la misma
-        self.call_one_time = 1
-
-        # variable para saber si hubo una colición
-        self.collision_snake = False
-
-        # cuánto se moverá la serpiente
-        self.change_position_x = self.snake_width + self.snake_margin
+        # how far the snake wil move
+        self.change_position_x = self.snake
         self.change_position_y = 0
-        # almacena los segmentos de la serpiente para construirla
+        # will contain all segments of snake
         self.snake_build_helper = []
-        # primer segmento de la serpiente
+        # first segment of snake (head)
         self.snake_head = None
-        # último segmento de la serpiente
+        # last segment of snake (tail)
         self.snake_tail = None
-        # flag variable to know if snake is dead
-        self.snake_is_dead = False
 
-        # listas para imperdir cambios bruscos en el manejo de la serpiente
+        # lists to avoid sudden change in the manage of snakge
         self.traceback_movements = ["K_RIGHT"]
         self.traceback_counter = [0]
-        # contador para evitar movimientos bruscos en el mismo segundo
+        # counter to avoid sudden and fast movements
         self.counter_time_between_movements = 0
 
 
-        ######## constantes de la tabla de puntuación ########
+        ######## SCOREBOARD ########
         self.board_width = 30
         self.board_height = 10
         self.board_point_initial = 0
-        # tipografía del texto de la table de puntuación
+        # font of scoreboard
         self.text_color_score = (30, 30, 30)
         self.text_scores = "Score: "
         self.text_highest_score = "Highest Score: "
 
-        # constantes del nombre del jugador con la más alta puntuación
-        # lista en que se guarda el nombre completo
+        ######## RECORD NAME ########
+        # will contains the name of beater
         self.name_of_beater = []
-        # variable tipo bandera. Por defecto será False
-        # por qué el usurioa no inicia el juego escribiento su nombre
+        # flag. By default, il will be False because the user doesn't start writing its name
         self.write_finish = False
+        # lenght of letter allowed
+        self.allowed_number_letter = 16
 
 
 
-        ######## constantes del menú principal ########
+        ######## MAIN MENU ########
         self.text_mainboard_1 = "Play 1"
         self.text_mainboard_2 = "Play 2"
         self.text_mainboard_3 = "Exit"
+        # color of the first text (white)
         self.text_mainboard_color_1 = (250, 250, 250)
+        # color black to mark defferent
         self.text_mainboard_color_2 = (0, 0, 0)
         self.main_menu = True
         self.play_1 = False
         self.play_2 = False
+        # tracer of the options choisen
         self.traceback_cursor = ["Play 1"]
-        # carácteres permitos
-        self.allowed_number_letter = 16
