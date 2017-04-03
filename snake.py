@@ -103,6 +103,9 @@ class SnakeWhole(Group):
             # add to the list of segments
             segments.append(segment)
 
+        # update snake' head in settings
+        self.settings.snake_head = segments[0]
+
 
     def move(self):
         """

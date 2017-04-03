@@ -78,15 +78,19 @@ def main():
         # check events of game
         fs.check_events(screen, counter, mainboard, settings, snake_whole)
 
-        # move snake
-        snake_whole.move()
+        # wheter the game isn't on the main menu
+        if not settings.main_menu:
+            # move snake
+            snake_whole.move()
 
         # just on game mode 2
         if settings.play_2:
             # change positions wheter snake achieve any borders
             snake_whole.snake_achieve_walls()
 
-        if snake_whole.is_snake_dead():
+        # see wheter snake is dead or not. Just if the game isn't
+        # on main menu
+        if snake_whole.is_snake_dead() and not settings.main_menu:
             # pause game
             fs.pause(0.40)
             # change flags to appear main menu
@@ -97,11 +101,12 @@ def main():
             snake_whole = SnakeWhole(screen, settings, fs)
             # if so, wait until user finish to write his/her name
             fs.wait_write_name(screen, settings, mainboard,
-                                                    score_board)
+                                                score_board)
 
 
-        # check if one bitten have occurred
-        if raton.is_colliding():
+        # check if one bitten have occurred. Just if the game
+        # isn't on main menu
+        if raton.is_colliding() and not settings.main_menu:
             # play bite sound
             settings.snake_head.sound_bite.play()
 
@@ -118,7 +123,6 @@ def main():
             while raton.is_colliding():
                 # change position of mouse
                 raton.change_position()
-
 
         # update all objects in screen
         fs.update_screen(screen, raton, snake_whole, raton, settings, score_board, mainboard)

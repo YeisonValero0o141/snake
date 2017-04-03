@@ -65,8 +65,7 @@ def add_rastreo_tracer(traceback_movements, counter_move_now, movement, counter)
     counter_move_now.append(counter)
 
 
-# Funciones para mover la serpiente con los eventos de las flechas serpiente
-def move_keydown(event, counter, settings, snake_whole):
+def change_snake_direction(event, counter, settings, snake_whole):
     """
     Move snake and does not allow sudden movements like opposite
     movements.
@@ -294,7 +293,7 @@ def check_events(screen, counter, mainboard, settings, snake_whole):
             exit()
         # wheter user press any buttons
         elif event.type == pygame.KEYDOWN and not settings.main_menu:
-            move_keydown(event, counter, settings, snake_whole)
+            change_snake_direction(event, counter, settings, snake_whole)
 
         if event.type == pygame.KEYDOWN and settings.main_menu:
             # move cursor and see if user pick a choice
