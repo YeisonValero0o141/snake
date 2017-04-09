@@ -74,7 +74,7 @@ class Settings():
         # initial length
         self.length_initial = 5
 
-        # alto, ancho y margen
+        # width, height and margin
         self.snake_width = 16
         self.snake_height = 15
         self.snake_margin = 3
@@ -87,7 +87,7 @@ class Settings():
         self.initial_position_y = 230
 
         # how far the snake wil move
-        self.change_position_x = self.snake
+        self.change_position_x = self.snake_height + self.snake_margin
         self.change_position_y = 0
         # will contain all segments of snake
         self.snake_build_helper = []
@@ -130,8 +130,27 @@ class Settings():
         self.text_mainboard_color_1 = (250, 250, 250)
         # color black to mark defferent
         self.text_mainboard_color_2 = (0, 0, 0)
+        # flags to decide what menu or game mode the game is in
         self.main_menu = True
         self.play_1 = False
         self.play_2 = False
-        # tracer of the options choisen
+        # tracer of the options ch
         self.traceback_cursor = ["Play 1"]
+
+
+
+        ######## PAUSE ########
+        # flag
+        self.pause = False
+        # text to draw on screen
+        self.pause_text = "PAUSE"
+        # text's color
+        self.pause_color_text = (55, 71, 79)
+        # x and y position will be in the middle of screen
+        self.pause_position_y = 225
+        self.pause_position_x = 430
+        # width text
+        self.pause_width = 150
+        self.pause_height = 70
+        # size font
+        self.pause_size_font = 60

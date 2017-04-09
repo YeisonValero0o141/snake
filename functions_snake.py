@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Function of the game.
+"""
+Function of the game.
 
 Functions such as: check events of game, draw all objects, close
 game, and so on.
@@ -14,6 +15,8 @@ import sys
 from time import sleep
 # pygame library
 import pygame
+# pygame's font
+import pygame.font
 # Snake class
 from snake import Snake
 # Raton (mouse) class
@@ -45,6 +48,11 @@ def update_screen(screen, raton, snake_whole, ratones, settings, score_board, ma
 
         # draw snake
         snake_whole.draw(screen)
+
+        # if and only if the game is not paused
+        if settings.pause:
+            # draw a rect on screen
+            draw_rect_text_pause(screen, settings)
 
     # flip screen
     pygame.display.flip()
@@ -132,13 +140,14 @@ def change_snake_direction(event, counter, settings, snake_whole):
     For example if snake is going to lefward avoid snake go to
     rightward. Also avoid movements in the same second.
     """
-    # guarda el valor del atributo de la clase como una variable de la función
+
     # take tracer of movements and counter
     traceback_movements = settings.traceback_movements
     counter_move_now = settings.traceback_counter
 
-    # wheter it's not same second and movement is not the opposite. This apply for all conditionals
-    if event.key == pygame.K_UP:
+    # wheter it's not same second and movement is not the opposite.
+    # Also if the is not paused. This apply for all conditionals
+    if event.key == pygame.K_UP and not settings.pause:
         if not traceback_movements[-1] == "K_DOWN" and not counter == counter_move_now[-1]:
             # move up
             snake_whole.move_up()
@@ -150,7 +159,7 @@ def change_snake_direction(event, counter, settings, snake_whole):
             # remove the first item of list of both tracer
             clean_tracers(traceback_movements, counter_move_now)
 
-    elif event.key == pygame.K_DOWN:
+    elif event.key == pygame.K_DOWN and not settings.pause:
         if not traceback_movements[-1] == "K_UP" and not counter == counter_move_now[-1]:
             # move downward
             snake_whole.move_down()
@@ -162,7 +171,7 @@ def change_snake_direction(event, counter, settings, snake_whole):
             # remove the first item of list of both tracer
             clean_tracers(traceback_movements, counter_move_now)
 
-    elif event.key == pygame.K_LEFT:
+    elif event.key == pygame.K_LEFT and not settings.pause:
         if not traceback_movements[-1] == "K_RIGHT" and not counter == counter_move_now[-1]:
             # move left
             snake_whole.move_left()
@@ -175,7 +184,7 @@ def change_snake_direction(event, counter, settings, snake_whole):
             clean_tracers(traceback_movements, counter_move_now)
 
 
-    elif event.key == pygame.K_RIGHT:
+    elif event.key == pygame.K_RIGHT and not settings.pause:
         if not traceback_movements[-1] == "K_LEFT" and not counter == counter_move_now[-1]:
             # move right
             snake_whole.move_right()
@@ -186,6 +195,58 @@ def change_snake_direction(event, counter, settings, snake_whole):
 
             # remove the first item of list of both tracer
             clean_tracers(traceback_movements, counter_move_now)
+
+
+    elif event.key == pygame.K_SPACE:
+        # pause game
+        pause_game(settings)
+
+
+
+####### PAUSE #######
+def pause_game(settings):
+    """Change flag to pause game."""
+    # change value. This is to utilize the function to
+    # pause and remove pause
+    settings.pause = not settings.pause
+
+
+def draw_rect_text_pause(screen, settings):
+    """Draw text of pause on screen."""
+    # color
+    color = settings.pause_color_text
+    # positions
+    positions = (settings.pause_position_x, settings.pause_position_y)
+    # size
+    size = (settings.pause_width, settings.pause_height)
+    # draw rect of pause
+    pygame.draw.rect(screen, color, (positions[0], positions[1],
+    size[0], size[1]))
+    # dra message in rect
+    draw_text_pause(screen, settings)
+
+
+def draw_text_pause(screen, settings):
+    """Draw text of pause in rect of pause."""
+    # take text and color. Use the same of snake
+    text = settings.pause_text
+    color = settings.snake_color
+    # background color
+    background_color = settings.pause_color_text
+    # size font
+    size_font = settings.pause_size_font
+    # font
+    font = pygame.font.SysFont(None, size_font)
+    # message to draw
+    message = font.render(text, True, color, background_color)
+    # get rect of message
+    message_rect = message.get_rect()
+    # set position
+    message_rect.x = 434
+    message_rect.y = 237
+    # blit message
+    screen.blit(message, message_rect)
+
 
 ####### FUNCTIONS FOR MAIN MENU #######
 def move_cursor(event, mainboard, settings):
@@ -222,7 +283,7 @@ def move_cursor(event, mainboard, settings):
             exit()
 
 
-def flag_play(settings, play="Play 1"):
+def flag_play(settings, play):
     """Change flags to run one the game modes."""
     if play == "Play 1":
         settings.play_1 = True
@@ -233,6 +294,12 @@ def flag_play(settings, play="Play 1"):
 
     settings.main_menu = False
 
+
+def change_flags(settings):
+    """Change flags to appears main menu."""
+    settings.play_1 = False
+    settings.play_2 = False
+    settings.main_menu = True
 
 def main_menu(event, settings, mainboard):
     """

@@ -11,7 +11,7 @@ class MainBoard():
 
     def __init__(self, screen, settings):
         """
-        Store all attribute of class and set its initial positions.
+        Store all attributes of class and set its initial position.
         """
         # save parameter like attributes
         self.screen = screen
@@ -24,7 +24,7 @@ class MainBoard():
         # take screen's rectangle
         self.screen_rect = self.screen.get_rect()
 
-        # save text and its color
+        # store text and its color
         self.text_1 = self.settings.text_mainboard_1
         self.text_2 = self.settings.text_mainboard_2
         self.text_3 = self.settings.text_mainboard_3
@@ -38,7 +38,7 @@ class MainBoard():
         # highest score
         self.highest_score = self.load_file(self.filename_1)
 
-        # name of player wht new record
+        # name of player wiht new record
         self.name_beater = self.load_file(self.filename_2, True)
 
         # set font by default

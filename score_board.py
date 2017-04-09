@@ -12,10 +12,12 @@ import os
 import pygame.font
 
 class ScoreBoard():
-    """Un intento de representar a una tabla de puntuación con un rectángulo."""
+    """Scoreboard."""
 
     def __init__(self, screen, settings):
-        """Inicializa todos los atributos de la clase y fija su posición inicial."""
+        """
+        Store all attribute of class and set its initial positions.
+        """
         self.screen = screen
         self.settings = settings
 

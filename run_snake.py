@@ -69,8 +69,10 @@ def main():
         # update scoreboard
         score_board.update()
 
-        # increase counter
-        counter += 1
+        # wheter game is not paused
+        if not settings.pause:
+            # increase counter
+            counter += 1
 
         # update counter of movements of settings
         settings.counter_time_between_movements = counter
@@ -78,8 +80,9 @@ def main():
         # check events of game
         fs.check_events(screen, counter, mainboard, settings, snake_whole)
 
-        # wheter the game isn't on the main menu
-        if not settings.main_menu:
+        # wheter the game isn't on the main menu and
+        # game doesn't be paused
+        if not settings.main_menu and not settings.pause:
             # move snake
             snake_whole.move()
 
