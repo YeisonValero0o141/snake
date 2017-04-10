@@ -81,5 +81,5 @@ class Raton():
 
 
     def blitme(self):
-        """Blit mouse on its current position."""
+        """Blit mouse on screen."""
         self.screen.blit(self.image, self.rect)

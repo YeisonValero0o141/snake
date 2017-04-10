@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 """
-Function of the game.
+Functions of the game.
 
 Functions such as: check events of game, draw all objects, close
-game, and so on.
+game, pause game and so on.
 """
 
 # import modules

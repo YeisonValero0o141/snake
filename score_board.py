@@ -6,8 +6,6 @@ Scoreboard of game.
 """
 
 # import modules
-# os from library standard
-import os
 # font of pygame
 import pygame.font
 
@@ -23,11 +21,10 @@ class ScoreBoard():
 
         # get image's rectangle
         self.screen_rect = self.screen.get_rect()
-
         # store color of text
         self.color_text = self.settings.text_color_score
         # set font and fontsize
-        self.font = pygame.font.SysFont(None, 48)
+        self.font = pygame.font.Font(None, 48)
         # store score
         self.points = self.settings.board_point_initial
         # save text

@@ -32,7 +32,7 @@ def main():
     # instance Settins class
     settings = Settings()
 
-    # set size's screen and open it
+    # set size's screen
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
     # set title's screen
     pygame.display.set_caption("Snake")
@@ -91,8 +91,8 @@ def main():
             # change positions wheter snake achieve any borders
             snake_whole.snake_achieve_walls()
 
-        # see wheter snake is dead or not. Just if the game isn't
-        # on main menu
+        # see wheter snake is dead or not
+        # Just if the game isn'ton main menu
         if snake_whole.is_snake_dead() and not settings.main_menu:
             # pause game
             fs.pause(0.40)
@@ -122,9 +122,9 @@ def main():
             # increase score of scoreboard
             raton.increase_point(settings)
 
-            # call the method again to know if it's still colliding
+            # call the method again to know if it's still colliding or not
             while raton.is_colliding():
-                # change position of mouse
+                # change position of mouse again
                 raton.change_position()
 
         # update all objects in screen

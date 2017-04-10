@@ -40,7 +40,6 @@ class MainBoard():
 
         # name of player wiht new record
         self.name_beater = self.load_file(self.filename_2, True)
-
         # set font by default
         self.font = pygame.font.SysFont(None, 60)
 
@@ -59,24 +58,24 @@ class MainBoard():
         # renderiza la máxima puntuación
         self.message_score = self.font.render(self.highest_score, True, self.color_2, self.settings.background_color)
 
-        # renderiza el nombre del jugador con la puntuación más alta
+        # render name of beater with highest score
         self.message_name = self.font.render(self.name_beater, True, self.color_2, self.settings.background_color)
 
-        # toma el ractángulo del texto 1, 2 y del 3
+        # get rectangle of message 1, 2 and 3
         self.rect_1 = self.message_1.get_rect()
         self.rect_2 = self.message_2.get_rect()
         self.rect_3 = self.message_3.get_rect()
 
-        # consigue el rectángulo del texto de la más alta puntuación
+        # get highest score message's rectangle
         self.message_score_rect = self.message_text_score.get_rect()
 
-        # consigue el rectángulo de la más alta puntuación
+        # get highest score's rectangle
         self.score_rect = self.message_score.get_rect()
 
-        # consigue el rectángulo del nombre del jugador cno la puntuación más alta
+        # get name of beater's rectangle
         self.name_rect = self.message_name.get_rect()
 
-        # establece la posición del texto 1, 2 y del 3
+        # set positions of messages
         self.rect_1.centerx = self.screen_rect.centerx - 90
         self.rect_1.centery = self.screen_rect.centery - 40
 
@@ -86,152 +85,144 @@ class MainBoard():
         self.rect_3.centerx = self.screen_rect.centerx - 15
         self.rect_3.centery = self.screen_rect.centery + 25
 
-        # fija la posición inicial del mensaje de la máxima puntuación
+        # set poisition of score message
         self.message_score_rect.centerx = self.screen_rect.centerx - 150
         self.message_score_rect.centery = self.screen_rect.centery - 130
 
-        # establece la posición de la máxima puntuación
+        # set highest score's position
         self.score_rect.centerx = self.screen_rect.centerx + 50
         self.score_rect.centery = self.screen_rect.centery - 130
 
-        # establece la posición del nombre del jugador con la puntuación más alta
+        # set name of beater's position
         self.name_rect.left = self.screen_rect.centerx + 100
         self.name_rect.centery = self.screen_rect.centery - 130
 
 
     def change_color_text1(self):
-        """"Cambia el color al texto 1."""
-        # renderiza el texto 1
+        """"Change color of text 1."""
         self.message_1 = self.font.render(self.text_1, True, self.color_2, self.settings.background_color)
 
-        # renderiza el texto 2
         self.message_2 = self.font.render(self.text_2, True, self.color_1, self.settings.background_color)
 
-        # renderiza el texto 3
         self.message_3 = self.font.render(self.text_3, True, self.color_1, self.settings.background_color)
 
 
     def change_color_text2(self):
-        """Cambia el color al texto 2."""
-        # renderiza el texto 1
+        """Change color of text 2."""
         self.message_1 = self.font.render(self.text_1, True, self.color_1, self.settings.background_color)
 
-        # renderiza el texto 2
         self.message_2 = self.font.render(self.text_2, True, self.color_2, self.settings.background_color)
 
-        # renderiza el texto 3
         self.message_3 = self.font.render(self.text_3, True, self.color_1, self.settings.background_color)
 
 
     def change_color_text3(self):
-        """Cambia el color al texto 3."""
-        # renderiza el texto 1
+        """Change color of text 3."""
         self.message_1 = self.font.render(self.text_1, True, self.color_1, self.settings.background_color)
 
-        # renderiza el texto 2
         self.message_2 = self.font.render(self.text_2, True, self.color_1, self.settings.background_color)
 
-        # renderiza el texto 3
         self.message_3 = self.font.render(self.text_3, True, self.color_2, self.settings.background_color)
 
 
     def write_file(self, filename, name=False):
-        """Escribe el nuevo récord en el archivo highest_score.txt"""
+        """Write name of beater or score in a given file."""
+        # work with name of player with highest score
         if name:
-            # almacena la lista de la clase en la variable
-            names = self.settings.name_of_beater
-            # se usará para pasar el contenido de la lista a string
-            name = ""
-            # lo pasa a un string para obtener el nombre completo y no items de la lista
-            for x in names:
-                # se guarda letra por letra
-                name += x
-            # se guarda el nombre completo en content
+            # store name of beater list of settings class
+            name_of_beater = self.settings.name_of_beater
+            # pass each leter
+            name = "".join(name_of_beater)
+            # save name
             content = name
+        # work with score
         else:
-            # almacena la puntuación actual
+            # store current store
             score = self.settings.board_point_initial
-            # se pasa a string para poder ser escrito en el archivo
+            # it's pass to string to be written in file
             score = str(score)
-            # se guarda el número pasado a string en content
+            # save score
             content = score
 
-        # si no existe o no fue encontrado, lo crea
+        # if it doesn't exists or didn't was find, it create it
         with open(filename, "w") as file_object:
             file_object.write(content)
 
 
     def load_file(self, filename, name=False):
-        """Carga el archivo y devuelve el contenido."""
-        # maneja las exepciones
+        """Load file and return its content"""
         try:
-            # abre el archivo, si existe existe, lo hace en modo lectura
+            # open file
             with open(filename) as file_object:
-                # lee la información del archivo y borra el salto de linea
+                # read content and delete jump line
                 content = file_object.read().rstrip()
-
-        except:
+        except IOError:
             if name:
-                # si se le pasa el parámetro escribe el nombre
+                # write name in file
                 self.write_file(filename, True)
             else:
-                # si no escribe el récord
+                # write score in file
                 self.write_file(filename)
         else:
             return content
 
 
     def check_beat_record(self):
-        """Verifica si se ha roto el récord."""
-        # guarda el valor devuelto y lo pasa a entero
+        """Check if the record was beat."""
+        # save file's content and convert to int
         record = self.load_file(self.filename_1)
         record = int(record)
-        # almacena la puntuación actual
+        # store current score
         score = self.settings.board_point_initial
+        # see if it's greater
         if score > record:
             # write new highest score in filename_1
             self.write_file(self.filename_1)
             # change flag to write new name
             self.settings.write_finish = True
+        # otherwise
         elif score <= record:
-            # si es menor no hace nada
+            # do nothing
             pass
 
 
     def update_record(self):
-        """Actualiza la puntuación máxima."""
-        # máxima puntuanción
+        """Update highest score."""
+        # highest score
         self.highest_score = self.load_file(self.filename_1)
-        # renderiza la máxima puntuación
+        # render it
         self.message_score = self.font.render(self.highest_score, True, self.color_2, self.settings.background_color)
+        # and blit it
+        self.blit_score()
 
 
     def update_name(self):
-        """Actualiza el nombre."""
-        # nombre del jugador del nuevo récord
+        """Update name of player with highest score."""
+        # load file
         self.name_beater = self.load_file(self.filename_2)
-        # renderiza el nombre del jugador con la puntuación más alta
+        # render name
         self.message_name = self.font.render(self.name_beater, True, self.color_2, self.settings.background_color)
+        # blit it
         self.blit_name()
 
 
     def blit_text1(self):
-        """Draw text 1 of the main menu."""
+        """Draw play 1 message of the main menu."""
         self.screen.blit(self.message_1, self.rect_1)
 
 
     def blit_text2(self):
-        """Draw text 2 of the main menu."""
+        """Draw play 2 message of the main menu."""
         self.screen.blit(self.message_2, self.rect_2)
 
 
     def blit_text3(self):
-        """Draw text 3 of the main menu."""
+        """Draw exit message of the main menu."""
         self.screen.blit(self.message_3, self.rect_3)
 
 
     def blit_text_score(self):
-        """Draw text of manu."""
+        """Draw score text of menu."""
         self.screen.blit(self.message_text_score, self.message_score_rect)
 
 
