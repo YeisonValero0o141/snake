@@ -18,8 +18,8 @@ class MainBoard():
         self.settings = settings
 
         # store file names
-        self.filename_1 = "highest_score.txt"
-        self.filename_2 = "name_beater.txt"
+        self.filename_1 = "data/score.txt"
+        self.filename_2 = "data/name.txt"
 
         # take screen's rectangle
         self.screen_rect = self.screen.get_rect()
@@ -44,22 +44,28 @@ class MainBoard():
         self.font = pygame.font.SysFont(None, 60)
 
         # renderiza el texto 1
-        self.message_1 = self.font.render(self.text_1, True, self.color_2, self.settings.background_color)
+        self.message_1 = self.font.render(self.text_1, True, \
+                self.color_2, self.settings.background_color)
 
         # renderiza el texto 2
-        self.message_2 = self.font.render(self.text_2, True, self.color_1, self.settings.background_color)
+        self.message_2 = self.font.render(self.text_2, True, \
+                self.color_1, self.settings.background_color)
 
         # renderiza el texto 3
-        self.message_3 = self.font.render(self.text_3, True, self.color_1, self.settings.background_color)
+        self.message_3 = self.font.render(self.text_3, True, \
+                self.color_1, self.settings.background_color)
 
         # renderiza el texto de la máxima puntuación
-        self.message_text_score = self.font.render(self.text_highest_score, True, self.color_2, self.settings.background_color)
+        self.message_text_score = self.font.render(self.text_highest_score, \
+                        True,  self.color_2, self.settings.background_color)
 
         # renderiza la máxima puntuación
-        self.message_score = self.font.render(self.highest_score, True, self.color_2, self.settings.background_color)
+        self.message_score = self.font.render(self.highest_score, True, \
+                            self.color_2, self.settings.background_color)
 
         # render name of beater with highest score
-        self.message_name = self.font.render(self.name_beater, True, self.color_2, self.settings.background_color)
+        self.message_name = self.font.render(self.name_beater, True, \
+                            self.color_2, self.settings.background_color)
 
         # get rectangle of message 1, 2 and 3
         self.rect_1 = self.message_1.get_rect()
@@ -100,29 +106,38 @@ class MainBoard():
 
     def change_color_text1(self):
         """"Change color of text 1."""
-        self.message_1 = self.font.render(self.text_1, True, self.color_2, self.settings.background_color)
+        self.message_1 = self.font.render(self.text_1, True, \
+                self.color_2, self.settings.background_color)
 
-        self.message_2 = self.font.render(self.text_2, True, self.color_1, self.settings.background_color)
+        self.message_2 = self.font.render(self.text_2, True, \
+                self.color_1, self.settings.background_color)
 
-        self.message_3 = self.font.render(self.text_3, True, self.color_1, self.settings.background_color)
+        self.message_3 = self.font.render(self.text_3, True, \
+                self.color_1, self.settings.background_color)
 
 
     def change_color_text2(self):
         """Change color of text 2."""
-        self.message_1 = self.font.render(self.text_1, True, self.color_1, self.settings.background_color)
+        self.message_1 = self.font.render(self.text_1, True, \
+                self.color_1, self.settings.background_color)
 
-        self.message_2 = self.font.render(self.text_2, True, self.color_2, self.settings.background_color)
+        self.message_2 = self.font.render(self.text_2, True, \
+                self.color_2, self.settings.background_color)
 
-        self.message_3 = self.font.render(self.text_3, True, self.color_1, self.settings.background_color)
+        self.message_3 = self.font.render(self.text_3, True, \
+                self.color_1, self.settings.background_color)
 
 
     def change_color_text3(self):
         """Change color of text 3."""
-        self.message_1 = self.font.render(self.text_1, True, self.color_1, self.settings.background_color)
+        self.message_1 = self.font.render(self.text_1, True, \
+                self.color_1, self.settings.background_color)
 
-        self.message_2 = self.font.render(self.text_2, True, self.color_1, self.settings.background_color)
+        self.message_2 = self.font.render(self.text_2, True, \
+                self.color_1, self.settings.background_color)
 
-        self.message_3 = self.font.render(self.text_3, True, self.color_2, self.settings.background_color)
+        self.message_3 = self.font.render(self.text_3, True, \
+                self.color_2, self.settings.background_color)
 
 
     def write_file(self, filename, name=False):
@@ -152,7 +167,6 @@ class MainBoard():
     def load_file(self, filename, name=False):
         """Load file and return its content"""
         try:
-            # open file
             with open(filename) as file_object:
                 # read content and delete jump line
                 content = file_object.read().rstrip()
@@ -180,10 +194,6 @@ class MainBoard():
             self.write_file(self.filename_1)
             # change flag to write new name
             self.settings.write_finish = True
-        # otherwise
-        elif score <= record:
-            # do nothing
-            pass
 
 
     def update_record(self):
@@ -191,7 +201,8 @@ class MainBoard():
         # highest score
         self.highest_score = self.load_file(self.filename_1)
         # render it
-        self.message_score = self.font.render(self.highest_score, True, self.color_2, self.settings.background_color)
+        self.message_score = self.font.render(self.highest_score, True, \
+                            self.color_2, self.settings.background_color)
         # and blit it
         self.blit_score()
 
@@ -201,7 +212,8 @@ class MainBoard():
         # load file
         self.name_beater = self.load_file(self.filename_2)
         # render name
-        self.message_name = self.font.render(self.name_beater, True, self.color_2, self.settings.background_color)
+        self.message_name = self.font.render(self.name_beater, True, \
+                        self.color_2, self.settings.background_color)
         # blit it
         self.blit_name()
 

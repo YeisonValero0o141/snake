@@ -6,22 +6,28 @@ Snake Game.
 """
 
 # import modules
+# sys from standard library
+import sys
 # import random number from standard library
 from random import randint
 # import pygame library
 import pygame
+
+# to avoid pyc files in python 2
+sys.dont_write_bytecode = True
+
 # import game's settings
-from settings import Settings
-# import game's functions with the alias of fs
-import functions_snake as fs
+from src.settings import Settings
+# import game's functions with the alias fs
+import src.functions_snake as fs
 # import Snake
-from snake import SnakeWhole
+from src.snake import Snake
 # import mouse
-from raton import Raton
+from src.raton import Raton
 # import scoreboard
-from score_board import ScoreBoard
+from src.score_board import ScoreBoard
 # import main menu
-from mainboard import MainBoard
+from src.mainboard import MainBoard
 
 
 def main():
@@ -47,7 +53,7 @@ def main():
     raton = Raton(screen, settings)
 
     # snake
-    snake_whole = SnakeWhole(screen, settings, fs)
+    snake = Snake(screen, settings, fs)
 
     # pygame's clock
     clock = pygame.time.Clock()
@@ -64,7 +70,7 @@ def main():
         clock.tick(10)
 
         # update snake's position
-        snake_whole.update()
+        snake.update()
 
         # update scoreboard
         score_board.update()
@@ -78,43 +84,48 @@ def main():
         settings.counter_time_between_movements = counter
 
         # check events of game
-        fs.check_events(screen, counter, mainboard, settings, snake_whole)
+        fs.check_events(screen, counter, mainboard, settings, snake)
 
         # wheter the game isn't on the main menu and
         # game doesn't be paused
         if not settings.main_menu and not settings.pause:
             # move snake
-            snake_whole.move()
+            snake.move()
 
         # just on game mode 2
         if settings.play_2:
             # change positions wheter snake achieve any borders
-            snake_whole.snake_achieve_walls()
+            snake.achieve_walls()
 
-        # see wheter snake is dead or not
+        # see wheter snake is dead or just player won game
         # Just if the game isn'ton main menu
-        if snake_whole.is_snake_dead() and not settings.main_menu:
-            # pause game
-            fs.pause(0.40)
+        if snake.is_snake_dead() or settings.play_won and not settings.main_menu:
+
+            if settings.play_won:
+                # pause game
+                fs.pause(2)
+            else:
+                # pause game
+                fs.pause(0.40)
+
             # change flags to appear main menu
             fs.change_flags(settings)
             # check if a record was beat
             mainboard.check_beat_record()
             # reinstance snake to restore inital values
-            snake_whole = SnakeWhole(screen, settings, fs)
+            snake = Snake(screen, settings, fs)
             # if so, wait until user finish to write his/her name
-            fs.wait_write_name(screen, settings, mainboard,
-                                                score_board)
+            fs.wait_write_name(screen, settings, mainboard, score_board)
 
 
         # check if one bitten have occurred. Just if the game
         # isn't on main menu
         if raton.is_colliding() and not settings.main_menu:
             # play bite sound
-            settings.snake_head.sound_bite.play()
+            snake.play_sound_bite()
 
             # increase lenght of snake
-            snake_whole.increase_lenght_of_snake()
+            snake.increase_lenght()
 
             # change position of mouse
             raton.change_position()
@@ -126,9 +137,13 @@ def main():
             while raton.is_colliding():
                 # change position of mouse again
                 raton.change_position()
+                
+        # check if player won
+        score_board.max_score_was_achieved()
 
         # update all objects in screen
-        fs.update_screen(screen, raton, snake_whole, raton, settings, score_board, mainboard)
+        fs.update_screen(screen, raton, snake, raton, settings,
+                                score_board, mainboard)
 
 
 if __name__ == "__main__":

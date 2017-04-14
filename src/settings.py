@@ -13,7 +13,8 @@ class Settings():
     """
     Contains all settings of the game.
 
-    Like size of screen, background color, size of snake, and so on. Even messages to be shown and data to store.
+    Like size of screen, background color, size of snake, and so on.
+    Even messages to be shown and data to store.
     """
 
     def __init__(self):
@@ -111,6 +112,14 @@ class Settings():
         self.text_color_score = (30, 30, 30)
         self.text_scores = "Score: "
         self.text_highest_score = "Highest Score: "
+        # flag to know if player won
+        self.play_won = False
+        # max score. If player achieve this score, s/he will win.
+        #  3 it's beacause of walls, will count for both game modes
+        self.max_score = ((self.screen_width - 3) // self.raton_width) * ((self.screen_height - 3) // self.raton_height)
+        self.congra_message = "You have won!"
+        self.congra_size = (300, 80)
+        self.congra_pos = (380, 220)
 
         ######## RECORD NAME ########
         # will contains the name of beater

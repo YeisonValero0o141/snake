@@ -17,15 +17,12 @@ from time import sleep
 import pygame
 # pygame's font
 import pygame.font
-# Snake class
-from snake import Snake
-# Raton (mouse) class
-from raton import Raton
 
 #####################################
 #####    IMPORTANT FUNCTIONS    #####
 #####################################
-def update_screen(screen, raton, snake_whole, ratones, settings, score_board, mainboard):
+def update_screen(screen, raton, snake, ratones, settings,
+                                    score_board, mainboard):
     """Update screen."""
     # fill screen with the background color
     screen.fill(settings.background_color)
@@ -47,18 +44,23 @@ def update_screen(screen, raton, snake_whole, ratones, settings, score_board, ma
         raton.blitme()
 
         # draw snake
-        snake_whole.draw(screen)
+        snake.draw(screen)
+
+        # just if player won
+        if settings.play_won:
+            # draw message of congratulations
+            draw_rect_on_screen(screen, settings, settings.congra_message, rect_won=True)
 
         # if and only if the game is not paused
         if settings.pause:
-            # draw a rect on screen
-            draw_rect_text_pause(screen, settings)
+            # draw pause
+            draw_rect_on_screen(screen, settings, settings.pause_text)
 
     # flip screen
     pygame.display.flip()
 
 
-def check_events(screen, counter, mainboard, settings, snake_whole):
+def check_events(screen, counter, mainboard, settings, snake):
     """
     Check events of game.
     Such as: move snake, close game and write name.
@@ -70,7 +72,7 @@ def check_events(screen, counter, mainboard, settings, snake_whole):
             exit()
         # wheter user press any buttons
         elif event.type == pygame.KEYDOWN and not settings.main_menu:
-            change_snake_direction(event, counter, settings, snake_whole)
+            change_snake_direction(event, counter, settings, snake)
 
         if event.type == pygame.KEYDOWN and settings.main_menu:
             # move cursor and see if user pick a choice
@@ -86,6 +88,7 @@ def pause(seconds):
     """Pause game by n seconds."""
     sleep(seconds)
 
+
 ####### FUCNTION TO DRAW WALLS #######
 def draw_walls(screen, settings):
     """Draw walls on border of screen."""
@@ -95,7 +98,7 @@ def draw_walls(screen, settings):
     size = settings.wall_size
     # wall's color
     color = settings.wall_color
-    # iterate over the list of all positions
+
     for position in positions:
         # draw wall
         pygame.draw.line(screen, color, position[0], position[1], size)
@@ -126,13 +129,14 @@ def clean_tracers(traceback_movements, counter_move_now):
     del counter_move_now[0]
 
 
-def add_rastreo_tracer(traceback_movements, counter_move_now, movement, counter):
+def add_rastreo_tracer(traceback_movements, counter_move_now,
+                                            movement, counter):
     """Add the trace to the tracer movements and counter."""
     traceback_movements.append(movement)
     counter_move_now.append(counter)
 
 
-def change_snake_direction(event, counter, settings, snake_whole):
+def change_snake_direction(event, counter, settings, snake):
     """
     Move snake and does not allow sudden movements like opposite
     movements.
@@ -148,9 +152,10 @@ def change_snake_direction(event, counter, settings, snake_whole):
     # wheter it's not same second and movement is not the opposite.
     # Also if the is not paused. This apply for all conditionals
     if event.key == pygame.K_UP and not settings.pause:
-        if not traceback_movements[-1] == "K_DOWN" and not counter == counter_move_now[-1]:
+        if not traceback_movements[-1] == "K_DOWN" and \
+                    not counter == counter_move_now[-1]:
             # move up
-            snake_whole.move_up()
+            snake.move_up()
 
             # add trace of movements and counter to the tracer
             add_rastreo_tracer(traceback_movements, counter_move_now,
@@ -160,9 +165,10 @@ def change_snake_direction(event, counter, settings, snake_whole):
             clean_tracers(traceback_movements, counter_move_now)
 
     elif event.key == pygame.K_DOWN and not settings.pause:
-        if not traceback_movements[-1] == "K_UP" and not counter == counter_move_now[-1]:
+        if not traceback_movements[-1] == "K_UP" and \
+                    not counter == counter_move_now[-1]:
             # move downward
-            snake_whole.move_down()
+            snake.move_down()
 
             # add trace of movements and counter to the tracer
             add_rastreo_tracer(traceback_movements, counter_move_now,
@@ -172,9 +178,10 @@ def change_snake_direction(event, counter, settings, snake_whole):
             clean_tracers(traceback_movements, counter_move_now)
 
     elif event.key == pygame.K_LEFT and not settings.pause:
-        if not traceback_movements[-1] == "K_RIGHT" and not counter == counter_move_now[-1]:
+        if not traceback_movements[-1] == "K_RIGHT" and \
+                        not counter == counter_move_now[-1]:
             # move left
-            snake_whole.move_left()
+            snake.move_left()
 
             # add trace of movements and counter to the tracer
             add_rastreo_tracer(traceback_movements, counter_move_now,
@@ -185,9 +192,10 @@ def change_snake_direction(event, counter, settings, snake_whole):
 
 
     elif event.key == pygame.K_RIGHT and not settings.pause:
-        if not traceback_movements[-1] == "K_LEFT" and not counter == counter_move_now[-1]:
+        if not traceback_movements[-1] == "K_LEFT" and \
+                    not counter == counter_move_now[-1]:
             # move right
-            snake_whole.move_right()
+            snake.move_right()
 
             # add trace of movements and counter to the tracer
             add_rastreo_tracer(traceback_movements, counter_move_now,
@@ -211,25 +219,34 @@ def pause_game(settings):
     settings.pause = not settings.pause
 
 
-def draw_rect_text_pause(screen, settings):
+def draw_rect_on_screen(screen, settings, text, rect_won=False):
     """Draw text of pause on screen."""
     # color
     color = settings.pause_color_text
     # positions
     positions = (settings.pause_position_x, settings.pause_position_y)
-    # size
-    size = (settings.pause_width, settings.pause_height)
+
+    # if the rect is for rect of congratulations message
+    if rect_won:
+        size = settings.congra_size
+        # positions
+        positions = settings.congra_pos
+    else:
+        # size of pause rect
+        size = (settings.pause_width, settings.pause_height)
+        # positions
+        positions = (settings.pause_position_x, settings.pause_position_y)
+
     # draw rect of pause
     pygame.draw.rect(screen, color, (positions[0], positions[1],
     size[0], size[1]))
-    # dra message in rect
-    draw_text_pause(screen, settings)
+    # draw message in the drawed rectangle
+    draw_text_on_screen(screen, settings, text, rect_won)
 
 
-def draw_text_pause(screen, settings):
+def draw_text_on_screen(screen, settings, text, rect_won=False):
     """Draw text of pause in rect of pause."""
-    # take text and color. Use the same of snake
-    text = settings.pause_text
+    # take color. Use the same of snake
     color = settings.snake_color
     # background color
     background_color = settings.pause_color_text
@@ -241,9 +258,16 @@ def draw_text_pause(screen, settings):
     message = font.render(text, True, color, background_color)
     # get rect of message
     message_rect = message.get_rect()
-    # set position
-    message_rect.x = 434
-    message_rect.y = 237
+
+    if rect_won:
+        # set position
+        message_rect.x = 385
+        message_rect.y = 237
+    else:
+        # set position
+        message_rect.x = 434
+        message_rect.y = 237
+
     # blit message
     screen.blit(message, message_rect)
 
@@ -367,7 +391,8 @@ def wait_write_name(screen, settings, mainboard, score_board):
 
 def limit_words(settings):
     """
-    Delete all characters of name of beater wheter it is large than it is allowed.
+    Delete all characters of name of beater wheter it is large
+    than it is allowed.
     """
     # take list that contains name of beater
     name = settings.name_of_beater

@@ -11,17 +11,15 @@ import pygame
 from pygame.sprite import Sprite, Group
 
 
-class Snake(Sprite):
+class Segment(Sprite):
     """
-    Snake.
-
-    Use littles segments to represent a snake.
+    It will be utilized to represent a snake.
     """
 
     def __init__(self, screen, settings, position_x, position_y):
         """Store all attributes."""
         # initialize superclass
-        super(Snake, self).__init__()
+        super(Segment, self).__init__()
         # store screen and settings
         self.screen = screen
         self.settings = settings
@@ -50,16 +48,13 @@ class Snake(Sprite):
         self.rect.x = position_x
         self.rect.y = position_y
 
-        # load bite sound
-        self.sound_bite = pygame.mixer.Sound('sonidos/mordisco.wav')
 
 
-
-class SnakeWhole(Group):
-    """Represent whole snake with its segments."""
+class Snake(Group):
+    """Represent whole snake with segments."""
 
     def __init__(self, screen, settings, fs):
-        """Initialize snake with a few segments. Store attributes."""
+        """Initialize snake with a few segments. Store all attributes too."""
         # store screen and settings parameter like attributes
         self.screen = screen
         self.settings = settings
@@ -77,11 +72,19 @@ class SnakeWhole(Group):
         # useful when user start to play again in a different or same mode of game
         self.fs.reset_values_settings(settings)
 
+        # load bite sound
+        self.sound_bite = pygame.mixer.Sound('sounds/mordisco.wav')
+
         # make segments of snake
         self.make_firsts_segments()
 
         # call superclass' init. Make group of sprites
-        super(SnakeWhole, self).__init__(settings.snake_build_helper)
+        super(Snake, self).__init__(settings.snake_build_helper)
+
+
+    def play_sound_bite(self):
+        """Play sound bite."""
+        self.sound_bite.play()
 
 
     def make_firsts_segments(self):
@@ -98,7 +101,7 @@ class SnakeWhole(Group):
             y = self.settings.initial_position_y
 
             # make segment
-            segment = Snake(self.screen, self.settings, x, y)
+            segment = Segment(self.screen, self.settings, x, y)
 
             # add to the list of segments
             segments.append(segment)
@@ -127,7 +130,7 @@ class SnakeWhole(Group):
         y = segments[0].rect.y + self.settings.change_position_y
 
         # head
-        snake = Snake(self.screen, self.settings, x, y)
+        snake = Segment(self.screen, self.settings, x, y)
 
         # insert head like the first segment (head)
         segments.insert(0, snake)
@@ -203,7 +206,7 @@ class SnakeWhole(Group):
             return False
 
 
-    def increase_lenght_of_snake(self):
+    def increase_lenght(self):
         """
         Increase snake by one segment.
 
@@ -220,7 +223,7 @@ class SnakeWhole(Group):
         y = last_segment.rect.y
 
         # create new sement at the end of the snake (the tail)
-        last_segment = Snake(self.screen, self.settings, x, y)
+        last_segment = Segment(self.screen, self.settings, x, y)
 
         # append segment in the list of segments
         segments.append(last_segment)
@@ -229,7 +232,7 @@ class SnakeWhole(Group):
         self.add(last_segment)
 
 
-    def snake_achieve_walls(self):
+    def achieve_walls(self):
         """
         Change position if snake achieve any borders of screen.
         """
@@ -243,11 +246,11 @@ class SnakeWhole(Group):
         elif snake.rect.bottom > self.screen_rect.bottom:
             # change its postion
             snake.rect.y = 5
-        # if snake achive right side border of screen
+        # if snake achive left side border of screen
         elif snake.rect.left < 0:
             # change its position
             snake.rect.x = 1000
-        # if snake achive left side border of screen
+        # if snake achive right side border of screen
         elif snake.rect.right > 1023:
             # change its position
             snake.rect.x = 5 + 1
