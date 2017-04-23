@@ -100,7 +100,7 @@ def draw_walls(screen, settings):
     color = settings.wall_color
 
     for position in positions:
-        # draw wall
+        # draw walls
         pygame.draw.line(screen, color, position[0], position[1], size)
 
 ####### FUCNTIONS FOR SNAKE #######

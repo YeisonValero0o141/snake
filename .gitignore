@@ -1,2 +1,3 @@
 /__pycache__/
 /*.pyc
+# pyc files are ignore in python3 as well as python2.

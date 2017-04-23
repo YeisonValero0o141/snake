@@ -5,9 +5,7 @@
 The snake of the game.
 """
 
-# import modules
 import pygame
-# import Sprite class
 from pygame.sprite import Sprite, Group
 
 
@@ -53,7 +51,7 @@ class Segment(Sprite):
 class Snake(Group):
     """Represent whole snake with segments."""
 
-    def __init__(self, screen, settings, fs):
+    def __init__(self, screen, settings, fs, path_sound='sounds/mordisco.wav'):
         """Initialize snake with a few segments. Store all attributes too."""
         # store screen and settings parameter like attributes
         self.screen = screen
@@ -73,7 +71,7 @@ class Snake(Group):
         self.fs.reset_values_settings(settings)
 
         # load bite sound
-        self.sound_bite = pygame.mixer.Sound('sounds/mordisco.wav')
+        self.sound_bite = pygame.mixer.Sound(path_sound)
 
         # make segments of snake
         self.make_firsts_segments()
@@ -96,7 +94,7 @@ class Snake(Group):
 
         # loop up through the inital lenght
         for i in range(lenght):
-            # position x and y
+            # x and y positions
             x = self.settings.initial_position_x
             y = self.settings.initial_position_y
 
@@ -108,6 +106,7 @@ class Snake(Group):
 
         # update snake' head in settings
         self.settings.snake_head = segments[0]
+        self.settings.snake_tail = segments[-1]
 
 
     def move(self):
@@ -155,44 +154,42 @@ class Snake(Group):
         snake_head = self.settings.snake_head
         # iterate over its lenght
         for x in range(len(snakes)):
-            # the head doesn't count
+            # we don't care about the head
             if x == 0:
                 # do nothing
                 pass
             else:
                 # pop the last segment
                 last_snake_segment = snakes.pop()
-                # check if it collide
+                # check if they collide
                 if snake_head.rect.colliderect(last_snake_segment.rect):
-                    # return True
                     return True
-        # otherwise, return False
         return False
 
 
     def does_collide_with_walls(self):
         """
-        Check wheter snake collide with the walls or not.
+        Check if snake collide with the walls or not.
 
         Return True if so, otherwise return False.
         """
         # take snake's head
         snake = self.settings.snake_head
         # return True if at least colllide with one wall
-        if snake.rect.top < 0:
+        if snake.rect.top < 3:
             return True
-        elif snake.rect.bottom > 545:
+        elif snake.rect.bottom > 541:
             return True
-        elif snake.rect.left < 0:
+        elif snake.rect.left < 3:
             return True
-        elif snake.rect.right > 1028:
+        elif snake.rect.right > 1021:
             return True
         # otherwise, return False
         else:
             return False
 
 
-    def is_snake_dead(self, play_1=False):
+    def is_snake_dead(self):
         """If snake is dead change flag variable, if not, keep the
         same vaue."""
         # first check is snake bite itself
@@ -239,22 +236,17 @@ class Snake(Group):
         # take snake's head
         snake = self.settings.snake_head
         # wheter snake achive top of border
-        if snake.rect.top < self.screen_rect.top:
-            # change its position
+        if snake.rect.y < self.screen_rect.top:
             snake.rect.y = 525
         # wheter snake achive bottom of border
-        elif snake.rect.bottom > self.screen_rect.bottom:
-            # change its postion
+        elif snake.rect.y > self.screen_rect.bottom:
             snake.rect.y = 5
         # if snake achive left side border of screen
-        elif snake.rect.left < 0:
-            # change its position
+        elif snake.rect.x < 0:
             snake.rect.x = 1000
         # if snake achive right side border of screen
-        elif snake.rect.right > 1023:
-            # change its position
-            snake.rect.x = 5 + 1
-
+        elif snake.rect.x > 1023:
+            snake.rect.x = 5
         # update settings's variable
         self.settings.snake_head = snake
 

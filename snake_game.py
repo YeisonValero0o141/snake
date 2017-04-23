@@ -6,27 +6,19 @@ Snake Game.
 """
 
 # import modules
-# sys from standard library
 import sys
-# import random number from standard library
 from random import randint
-# import pygame library
+
 import pygame
 
 # to avoid pyc files in python 2
 sys.dont_write_bytecode = True
 
-# import game's settings
 from src.settings import Settings
-# import game's functions with the alias fs
 import src.functions_snake as fs
-# import Snake
 from src.snake import Snake
-# import mouse
 from src.raton import Raton
-# import scoreboard
 from src.score_board import ScoreBoard
-# import main menu
 from src.mainboard import MainBoard
 
 
@@ -67,24 +59,21 @@ def main():
     # main loop
     while True:
         # set fps
-        clock.tick(10)
+        clock.tick(11)
 
-        # update snake's position
-        snake.update()
+        # wheter game is neither nor paused
+        if not settings.pause and not settings.main_menu:
+            # update snake's position
+            snake.update()
 
-        # update scoreboard
-        score_board.update()
+            # update scoreboard
+            score_board.update()
 
-        # wheter game is not paused
-        if not settings.pause:
             # increase counter
             counter += 1
 
-        # update counter of movements of settings
-        settings.counter_time_between_movements = counter
-
-        # check events of game
-        fs.check_events(screen, counter, mainboard, settings, snake)
+            # update counter of movements of settings
+            settings.counter_time_between_movements = counter
 
         # wheter the game isn't on the main menu and
         # game doesn't be paused
@@ -93,7 +82,7 @@ def main():
             snake.move()
 
         # just on game mode 2
-        if settings.play_2:
+        if settings.play_2 and not settings.main_menu:
             # change positions wheter snake achieve any borders
             snake.achieve_walls()
 
@@ -137,9 +126,12 @@ def main():
             while raton.is_colliding():
                 # change position of mouse again
                 raton.change_position()
-                
+
         # check if player won
         score_board.max_score_was_achieved()
+
+        # check events of game
+        fs.check_events(screen, counter, mainboard, settings, snake)
 
         # update all objects in screen
         fs.update_screen(screen, raton, snake, raton, settings,
@@ -147,5 +139,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # run game
     main()
