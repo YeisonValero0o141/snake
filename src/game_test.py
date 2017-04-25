@@ -15,6 +15,7 @@ sys.dont_write_bytecode = True
 from settings import Settings
 import functions_snake as fs
 from snake import Snake
+from raton import Raton
 
 pygame.init()
 
@@ -31,17 +32,6 @@ class TestSnake(unittest.TestCase):
         length_initial = settings.length_initial
         snake = Snake(screen, settings, fs, '../sounds/mordisco.wav')
         self.assertEqual(len(snake), length_initial, msg='Snake len ({0}) is not {1}'.format(len(snake), length_initial))
-
-
-    def test_increase_lenght(self):
-        """Test increase_lenght method."""
-        snake = Snake(screen, settings, fs, '../sounds/mordisco.wav')
-        len_snake = len(settings.snake_build_helper)
-
-        for x in range(1, 51):
-            expected_len = len_snake + x
-            snake.increase_lenght()
-            self.assertEqual(len(snake), expected_len, msg='the increase failed beacause {0} is not equal than {1}'.format(len(snake), expected_len))
 
 
     def test_collide_with_walls(self):
@@ -70,6 +60,17 @@ class TestSnake(unittest.TestCase):
             head.rect.x = well_pos[0]
             head.rect.y = well_pos[1]
             self.assertFalse(snake.does_collide_with_walls(), msg='positions {} is wrong'.format(well_pos))
+
+
+    def test_increase_lenght(self):
+        """Test increase_lenght method."""
+        snake = Snake(screen, settings, fs, '../sounds/mordisco.wav')
+        len_snake = len(settings.snake_build_helper)
+
+        for x in range(1, 51):
+            expected_len = len_snake + x
+            snake.increase_lenght()
+            self.assertEqual(len(snake), expected_len, msg='the increase failed beacause {0} is not equal than {1}'.format(len(snake), expected_len))
 
 
     def test_achieve_walls(self):
@@ -105,7 +106,7 @@ class TestSnake(unittest.TestCase):
 
 
     def test_moves(self):
-        """test move_up, move_down, move_left and move_right."""
+        """test move_up, move_down, move_left and move_right methods."""
         change_moves = [
             (-18, 0,), (18, 0,),
             (0, -18,), (0, 18,)
@@ -122,6 +123,55 @@ class TestSnake(unittest.TestCase):
             move = (settings.change_position_y, settings.change_position_x)
 
             self.assertTupleEqual(move, ch_move, msg='{0} and {1} are not equal.'.format(move, ch_move))
+
+
+
+class TestRaton(unittest.TestCase):
+    """Test for Raton class and its methods."""
+
+    def test_change_position(self):
+        """Does change_positions method really change the
+        position of raton?"""
+        raton = Raton(screen, settings)
+        # raton's position
+        position = raton.rect[:2]
+
+        raton.change_position()
+        # take the position already changed
+        new_position = raton.rect[:2]
+
+        self.assertNotEqual(position, new_position, msg='{0} and {1} are the same thing.'.format(position, new_position))
+
+
+    def test_increase_point(self):
+        """Check wheter or not increase_point method works."""
+        raton = Raton(screen, settings)
+
+        for x in range(1, 99):
+            # call method to increase score
+            raton.increase_point()
+            # store score
+            score = settings.board_point_initial
+
+            self.assertEqual(score, x)
+
+
+    def test_is_colliding(self):
+        """Test if_colliding method."""
+        raton = Raton(screen, settings)
+        # snake, it's need it to change position and test is_colliding
+        snake = Snake(screen, settings, fs, '../sounds/mordisco.wav')
+        # take snake's head
+        head = settings.snake_head
+
+        self.assertFalse(raton.is_colliding(), msg='raton collide with snake.')
+
+        # raton's position
+        raton_pos = raton.rect[:2]
+        # change position of snake's head
+        head.rect.x, head.rect.y = raton_pos
+
+        self.assertTrue(raton.is_colliding(), msg='raton does not collide.')
 
 
 

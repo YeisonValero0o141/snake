@@ -120,7 +120,7 @@ def main():
             raton.change_position()
 
             # increase score of scoreboard
-            raton.increase_point(settings)
+            raton.increase_point()
 
             # call the method again to know if it's still colliding or not
             while raton.is_colliding():

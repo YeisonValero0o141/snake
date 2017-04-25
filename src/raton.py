@@ -20,7 +20,7 @@ class Raton():
 
     def __init__(self, screen, settings):
         """Store attributes."""
-        # store screen and settings like an attributes
+        # store screen and settings like attributes
         self.screen = screen
         self.settings = settings
 
@@ -56,12 +56,12 @@ class Raton():
 
 
     def change_position(self):
-        """Set position randomly."""
+        """Change position randomly."""
         self.rect.x = randint(self.range_x1, self.range_x2)
         self.rect.y = randint(self.range_y1, self.range_y2)
 
 
-    def increase_point(self, settings):
+    def increase_point(self):
         """Increase the score of scoreboard."""
         self.settings.board_point_initial += self.point
 
