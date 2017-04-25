@@ -1,10 +1,10 @@
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
 Test all characters of game.
 """
+
 import unittest
 import sys
 
@@ -70,7 +70,7 @@ class TestSnake(unittest.TestCase):
         for x in range(1, 51):
             expected_len = len_snake + x
             snake.increase_lenght()
-            self.assertEqual(len(snake), expected_len, msg='the increase failed beacause {0} is not equal than {1}'.format(len(snake), expected_len))
+            self.assertEqual(len(snake), expected_len, msg='the test failed beacause {0} is not equal than {1}'.format(len(snake), expected_len))
 
 
     def test_achieve_walls(self):
