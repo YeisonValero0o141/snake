@@ -91,10 +91,8 @@ def main():
         if snake.is_snake_dead() or settings.play_won and not settings.main_menu:
 
             if settings.play_won:
-                # pause game
                 fs.pause(2)
             else:
-                # pause game
                 fs.pause(0.40)
 
             # change flags to appear main menu
