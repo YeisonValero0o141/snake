@@ -6,7 +6,7 @@ The score, it will save too. Even if you close the game and open it again.
 Play:
 In the main menu you have to choice one game mode or just close the game.
 You can move cursor with the arrow keys and then, the snake will appear.
-You can move the snake with the arrow keys too.
+You can move the snake with the arrow keys too. With space bar, it can pause game and remove pause.
 
 Requirements: 
     
