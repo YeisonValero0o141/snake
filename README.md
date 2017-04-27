@@ -28,7 +28,8 @@ Requirements:
         sudo pip3 -h install pygame
 
 Run Game:
-    In ubuntu and deireved one.
+    In ubuntu and derived ones.
+    
     In python 2:
         python snake_game.py
     In python 3:
