@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Mainboard of game."""
+"""
+Mainboard of game.
+
+Copyright: (c) 2017 by Yeison Valero.
+License: MIT, see LICENSE for more information.
+"""
 
 # import pygame's font
 import pygame.font

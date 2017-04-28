@@ -3,6 +3,9 @@
 
 """
 Mouse of the game. Not the cursor.
+
+Copyright: (c) 2017 by Yeison Valero.
+License: MIT, see LICENSE for more information.
 """
 
 # import modules

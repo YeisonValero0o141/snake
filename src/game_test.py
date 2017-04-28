@@ -3,6 +3,9 @@
 
 """
 Test all characters of game.
+
+Copyright: (c) 2017 by Yeison Valero.
+License: MIT, see LICENSE for more information.
 """
 
 import unittest

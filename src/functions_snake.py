@@ -6,6 +6,9 @@ Functions of the game.
 
 Functions such as: check events of game, draw all objects, close
 game, pause game and so on.
+
+Copyright: (c) 2017 by Yeison Valero.
+License: MIT, see LICENSE for more information.
 """
 
 # import modules
